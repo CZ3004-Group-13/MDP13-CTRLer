@@ -118,10 +118,10 @@ public final class PathGrid extends View {
         }
 
         this.setPaint(this.startPaintColor, this.startColor);
-        this.colorCell(canvas, this._finder.getStartY(), this._finder.getStartX(), 12.0F, this.startPaintColor);
+        this.colorCell(canvas, this._finder.getStartY(), this._finder.getStartX(), 5.0F, this.startPaintColor);
 
         this.setPaint(this.endPaintColor, this.endColor);
-        this.colorCell(canvas, this._finder.getEndY(), this._finder.getEndX(), 12.0F, this.endPaintColor);
+        this.colorCell(canvas, this._finder.getEndY(), this._finder.getEndX(), 5.0F, this.endPaintColor);
     }
 
     private final void colorCell(Canvas canvas, int r, int c, float radius, Paint paintColor) {
