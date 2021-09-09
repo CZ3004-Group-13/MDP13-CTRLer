@@ -222,12 +222,13 @@ public final class PathGrid extends View {
         return true;
     }
 
-    private void moveCell(int x, int y, int turn, int firstTouch) {
+    private void moveCell(int x, int y, int turn, int firstTouch) throws ArrayIndexOutOfBoundsException {
         // MOVE BLUE START/ROBOT BLOCK
         if (turn == START_BLOCK_TURN) {
-            if (x >= 1 && y >= 1 && x <= 15 && y <= 15 &&
+            if (x >= 1 && y >= 1 && x+1 <= 15 && y+1 <= 15 &&
                     (this._finder.getBoard()[y][x] == EMPTY_CELL_CODE)
             ) {
+
                 this._finder.getBoard()[this._finder.getStartY()][this._finder.getStartX()] = EMPTY_CELL_CODE;
                 this._finder.getBoard()[this._finder.getStartY()][this._finder.getStartX()+1] = EMPTY_CELL_CODE;
                 this._finder.getBoard()[this._finder.getStartY()+1][this._finder.getStartX()] = EMPTY_CELL_CODE;
