@@ -105,6 +105,7 @@ public final class PathGrid extends View {
                     this.colorCell(canvas, i, j, 12.0F, this.explorePaintColor);
                 }
 
+                // EXPLORE ANIMATION HEAD
                 if (this._finder.getBoard()[i][j] == EXPLORE_HEAD_CELL_CODE) {
                     this.setPaint(this.exploreHeadPaintColor, this.exploreHeadColor);
                     this.colorCell(canvas, i, j, 0.0F, this.exploreHeadPaintColor);
@@ -119,6 +120,9 @@ public final class PathGrid extends View {
 
         this.setPaint(this.startPaintColor, this.startColor);
         this.colorCell(canvas, this._finder.getStartY(), this._finder.getStartX(), 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._finder.getStartY(), this._finder.getStartX()+1, 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._finder.getStartY()+1, this._finder.getStartX(), 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._finder.getStartY()+1, this._finder.getStartX()+1, 5.0F, this.startPaintColor);
 
         this.setPaint(this.endPaintColor, this.endColor);
         this.colorCell(canvas, this._finder.getEndY(), this._finder.getEndX(), 5.0F, this.endPaintColor);
@@ -186,15 +190,25 @@ public final class PathGrid extends View {
                     this.turn =
                             x == this._finder.getEndX() && y == this._finder.getEndY()
                                     ? END_BLOCK_TURN
-                                    : (x == this._finder.getStartX() && y == this._finder.getStartY()
+                                    : ((x == this._finder.getStartX() && y == this._finder.getStartY()) ||
+                                    (x == this._finder.getStartX() && y == this._finder.getStartY()+1) ||
+                                    (x == this._finder.getStartX()+1 && y == this._finder.getStartY()) ||
+                                    (x == this._finder.getStartX()+1 && y == this._finder.getStartY()+1))
+                                    // TODO: Fix Start "eat up" Obstacle
+//                                    (x == this._finder.getStartX()-1 && y == this._finder.getStartY()-1) ||
+//                                    (x == this._finder.getStartX()-1 && y == this._finder.getStartY()+1) ||
+//                                    (x == this._finder.getStartX()-1 && y == this._finder.getStartY()) ||
+//                                    (x == this._finder.getStartX()+1 && y == this._finder.getStartY()-1) ||
+//                                    (x == this._finder.getStartX() && y == this._finder.getStartY()-1))
                                     ? START_BLOCK_TURN
-                                    : OBSTACLE_BLOCK_TURN);
+                                    : OBSTACLE_BLOCK_TURN;
                     if (this.turn == OBSTACLE_BLOCK_TURN) {
                         this.moveCell(x, y, this.turn, 1);
                     } else {
                         this.moveCell(x, y, this.turn, 0);
                     }
                     break;
+                // MOVE CELL 1 by 1
                 case MotionEvent.ACTION_MOVE:
                     y = (int) (ceil(eventY / cellSize));
                     x = (int) (ceil(eventX / cellSize));
@@ -208,20 +222,26 @@ public final class PathGrid extends View {
         return true;
     }
 
-    public final void setSolving(boolean flag) {
-        this.isSolving = flag;
-    }
-
     private void moveCell(int x, int y, int turn, int firstTouch) {
+        // MOVE BLUE START/ROBOT BLOCK
         if (turn == START_BLOCK_TURN) {
             if (x >= 1 && y >= 1 && x <= 15 && y <= 15 &&
                     (this._finder.getBoard()[y][x] == EMPTY_CELL_CODE)
             ) {
                 this._finder.getBoard()[this._finder.getStartY()][this._finder.getStartX()] = EMPTY_CELL_CODE;
+                this._finder.getBoard()[this._finder.getStartY()][this._finder.getStartX()+1] = EMPTY_CELL_CODE;
+                this._finder.getBoard()[this._finder.getStartY()+1][this._finder.getStartX()] = EMPTY_CELL_CODE;
+                this._finder.getBoard()[this._finder.getStartY()+1][this._finder.getStartX()+1] = EMPTY_CELL_CODE;
+
                 this._finder.setStartX(x);
                 this._finder.setStartY(y);
+
                 this._finder.getBoard()[this._finder.getStartY()][this._finder.getStartX()] = START_CELL_CODE;
+                this._finder.getBoard()[this._finder.getStartY()][this._finder.getStartX()+1] = START_CELL_CODE;
+                this._finder.getBoard()[this._finder.getStartY()+1][this._finder.getStartX()] = START_CELL_CODE;
+                this._finder.getBoard()[this._finder.getStartY()+1][this._finder.getStartX()+1] = START_CELL_CODE;
             }
+        // MOVE RED END/TARGET BLOCK
         } else if (turn == END_BLOCK_TURN) {
             if (x >= 1 && y >= 1 && x <= 15 && y <= 15 &&
                 (this._finder.getBoard()[y][x] == EMPTY_CELL_CODE)
@@ -231,9 +251,11 @@ public final class PathGrid extends View {
                 this._finder.setEndY(y);
                 this._finder.getBoard()[this._finder.getEndY()][this._finder.getEndX()] = END_CELL_CODE;
             }
+        // PLACE/UNPLACE OBSTACLE
         } else {
             if (x >= 1 && y >= 1 && x <= 15 && y <= 15 &&
-                    (x != this._finder.getStartX() || y != this._finder.getStartY()) &&
+                    (x != this._finder.getStartX() || y != this._finder.getStartY() ||
+                     x != this._finder.getStartX()+1 || y != this._finder.getStartY()+1) &&
                     (x != this._finder.getEndX() || y != this._finder.getEndY()) &&
                     (abs(x - this._finder.getObstacleX()) >= 1 || abs(y - this._finder.getObstacleY()) >= 1 || firstTouch == 1)
             ) {
@@ -272,7 +294,9 @@ public final class PathGrid extends View {
         this.invalidate();
     }
 
-
+    public final void setSolving(boolean flag) {
+        this.isSolving = flag;
+    }
 
 }
 
