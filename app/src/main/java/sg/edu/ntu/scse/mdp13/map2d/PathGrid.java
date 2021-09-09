@@ -1,0 +1,278 @@
+package sg.edu.ntu.scse.mdp13.map2d;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.ceil;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Paint.Style;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.MeasureSpec;
+
+import androidx.annotation.Nullable;
+
+import sg.edu.ntu.scse.mdp13.R;
+import sg.edu.ntu.scse.mdp13.R.styleable;
+import sg.edu.ntu.scse.mdp13.pathFinder.PathFinder;
+import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.EMPTY_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.END_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.EXPLORE_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.EXPLORE_HEAD_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.FINAL_PATH_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.OBSTACLE_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.START_CELL_CODE;
+
+public final class PathGrid extends View {
+    private int pathColor;
+    private int obstacleColor;
+    private int startColor;
+    private int endColor;
+    private int finalPathColor;
+    private int exploreHeadColor;
+    private int exploreColor;
+    private Paint exploreHeadPaintColor = new Paint();
+    private Paint pathPaintColor = new Paint();
+    private Paint obstaclePaintColor = new Paint();
+    private Paint startPaintColor = new Paint();
+    private Paint finalPathPaintColor = new Paint();
+    private Paint endPaintColor = new Paint();
+    private Paint explorePaintColor = new Paint();
+
+    private int cellSize = 0;
+    private PathFinder _finder = new PathFinder();
+    private int turn = 0;
+    private boolean isSolving = false;
+
+    public static final int OBSTACLE_BLOCK_TURN = 0;
+    public static final int START_BLOCK_TURN = -1;
+    public static final int END_BLOCK_TURN = 1;
+
+    public PathGrid(Context context) {
+        super(context);
+    }
+
+    public PathGrid(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        TypedArray typedArray =
+                context.getTheme().obtainStyledAttributes(attrs, styleable.PathGrid, 0, 0);
+        try {
+            this.pathColor = typedArray.getInteger(R.styleable.PathGrid_gridColor, 0);
+            this.obstacleColor = typedArray.getInteger(R.styleable.PathGrid_obstacleColor, 0);
+            this.startColor = typedArray.getInteger(R.styleable.PathGrid_startColor, 0);
+            this.endColor = typedArray.getInteger(R.styleable.PathGrid_endColor, 0);
+            this.exploreColor = typedArray.getInteger(R.styleable.PathGrid_exploreColor, 0);
+            this.exploreHeadColor = typedArray.getInteger(R.styleable.PathGrid_exploreHeadColor, 0);
+            this.finalPathColor = typedArray.getInteger(R.styleable.PathGrid_finalPathColor, 0);
+        } finally {
+            typedArray.recycle();
+        }
+    }
+
+
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int dimension = Math.min(height, width);
+        this.cellSize = dimension / 15;
+        this.setMeasuredDimension(dimension, dimension);
+    }
+
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        this.setPaint(this.pathPaintColor, this.pathColor);
+        this.drawGrid(canvas);
+
+        this.setPaint(this.obstaclePaintColor, this.obstacleColor);
+        this.colorObstacleCell(canvas, this._finder.getObstacleY(), this._finder.getObstacleX());
+
+        for(int i = 1; i <= 15; ++i) {
+            for(int j = 1; j <= 15; ++j) {
+                if (this._finder.getBoard()[i][j] == OBSTACLE_CELL_CODE) {
+                    this.setPaint(this.obstaclePaintColor, this.obstacleColor);
+                    this.colorObstacleCell(canvas, i, j);
+                }
+
+                if (this._finder.getBoard()[i][j] == EXPLORE_CELL_CODE) {
+                    this.setPaint(this.explorePaintColor, this.exploreColor);
+                    this.colorCell(canvas, i, j, 12.0F, this.explorePaintColor);
+                }
+
+                if (this._finder.getBoard()[i][j] == EXPLORE_HEAD_CELL_CODE) {
+                    this.setPaint(this.exploreHeadPaintColor, this.exploreHeadColor);
+                    this.colorCell(canvas, i, j, 0.0F, this.exploreHeadPaintColor);
+                }
+
+                if (this._finder.getBoard()[i][j] == FINAL_PATH_CELL_CODE) {
+                    this.setPaint(this.finalPathPaintColor, this.finalPathColor);
+                    this.colorCell(canvas, i, j, 12.0F, this.finalPathPaintColor);
+                }
+            }
+        }
+
+        this.setPaint(this.startPaintColor, this.startColor);
+        this.colorCell(canvas, this._finder.getStartY(), this._finder.getStartX(), 12.0F, this.startPaintColor);
+
+        this.setPaint(this.endPaintColor, this.endColor);
+        this.colorCell(canvas, this._finder.getEndY(), this._finder.getEndX(), 12.0F, this.endPaintColor);
+    }
+
+    private final void colorCell(Canvas canvas, int r, int c, float radius, Paint paintColor) {
+        RectF rectF = new RectF(
+                (float)((c - 1) * this.cellSize),
+                (float)((r - 1) * this.cellSize),
+                (float)(c * this.cellSize),
+                (float)(r * this.cellSize)
+        );
+
+        canvas.drawRoundRect(
+                rectF, // rect
+                radius, // rx
+                radius, // ry
+                paintColor // Paint
+        );
+        this.invalidate();
+    }
+
+    private final void setPaint(Paint paintColor, int color) {
+        paintColor.setStyle(Style.FILL);
+        paintColor.setColor(color);
+        paintColor.setAntiAlias(true);
+    }
+
+    public final PathFinder getFinder() {
+        return this._finder;
+    }
+
+    private final void drawGrid(Canvas canvas) {
+        for(int i = 1; i <= 15; ++i) {
+            for(int j = 1; j <= 15; ++j) {
+                RectF rectF = new RectF(
+                        (float)((j - 1) * this.cellSize) + (float)1,
+                        (float)((i - 1) * this.cellSize) + (float)1,
+                        (float)(j * this.cellSize) - (float)1,
+                        (float)(i * this.cellSize) - (float)1
+                );
+                int cornersRadius = 5;
+                canvas.drawRoundRect(
+                        rectF, // rect
+                        (float)cornersRadius, // rx
+                        (float)cornersRadius, // ry
+                        this.pathPaintColor // Paint
+                );
+            }
+        }
+    }
+
+    @SuppressLint({"ClickableViewAccessibility"})
+    public boolean onTouchEvent(MotionEvent event) {
+        float eventX = event.getX();
+        float eventY = event.getY();
+        if (!this.isSolving) {
+            int y;
+            int x;
+            switch(event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    y = (int) (ceil(eventY / cellSize));
+                    x = (int) (ceil(eventX / cellSize));
+
+                    this.turn =
+                            x == this._finder.getEndX() && y == this._finder.getEndY()
+                                    ? END_BLOCK_TURN
+                                    : (x == this._finder.getStartX() && y == this._finder.getStartY()
+                                    ? START_BLOCK_TURN
+                                    : OBSTACLE_BLOCK_TURN);
+                    if (this.turn == OBSTACLE_BLOCK_TURN) {
+                        this.moveCell(x, y, this.turn, 1);
+                    } else {
+                        this.moveCell(x, y, this.turn, 0);
+                    }
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    y = (int) (ceil(eventY / cellSize));
+                    x = (int) (ceil(eventX / cellSize));
+                    this.moveCell(x, y, turn, 0);
+                    break;
+            }
+
+            this.invalidate();
+        }
+
+        return true;
+    }
+
+    public final void setSolving(boolean flag) {
+        this.isSolving = flag;
+    }
+
+    private void moveCell(int x, int y, int turn, int firstTouch) {
+        if (turn == START_BLOCK_TURN) {
+            if (x >= 1 && y >= 1 && x <= 15 && y <= 15 &&
+                    (this._finder.getBoard()[y][x] == EMPTY_CELL_CODE)
+            ) {
+                this._finder.getBoard()[this._finder.getStartY()][this._finder.getStartX()] = EMPTY_CELL_CODE;
+                this._finder.setStartX(x);
+                this._finder.setStartY(y);
+                this._finder.getBoard()[this._finder.getStartY()][this._finder.getStartX()] = START_CELL_CODE;
+            }
+        } else if (turn == END_BLOCK_TURN) {
+            if (x >= 1 && y >= 1 && x <= 15 && y <= 15 &&
+                (this._finder.getBoard()[y][x] == EMPTY_CELL_CODE)
+            ) {
+                this._finder.getBoard()[this._finder.getEndY()][this._finder.getEndX()] = EMPTY_CELL_CODE;
+                this._finder.setEndX(x);
+                this._finder.setEndY(y);
+                this._finder.getBoard()[this._finder.getEndY()][this._finder.getEndX()] = END_CELL_CODE;
+            }
+        } else {
+            if (x >= 1 && y >= 1 && x <= 15 && y <= 15 &&
+                    (x != this._finder.getStartX() || y != this._finder.getStartY()) &&
+                    (x != this._finder.getEndX() || y != this._finder.getEndY()) &&
+                    (abs(x - this._finder.getObstacleX()) >= 1 || abs(y - this._finder.getObstacleY()) >= 1 || firstTouch == 1)
+            ) {
+                if (this._finder.getBoard()[y][x] == EMPTY_CELL_CODE) {
+                    this._finder.setObstacleX(x);
+                    this._finder.setObstacleY(y);
+                    this._finder.getBoard()[y][x] = OBSTACLE_CELL_CODE;
+                } else if (this._finder.getBoard()[y][x] == OBSTACLE_CELL_CODE) {
+                    this._finder.setObstacleX(x);
+                    this._finder.setObstacleY(y);
+                    this._finder.getBoard()[y][x] = EMPTY_CELL_CODE;
+                }
+            }
+        }
+
+    }
+
+    private void colorObstacleCell(Canvas canvas, int r, int c) {
+        if (r != -1 && c != -1 && this._finder.getBoard()[r][c] == OBSTACLE_CELL_CODE) {
+            RectF rectF = new RectF(
+                    (float)((c - 1) * this.cellSize),
+                    (float)((r - 1) * this.cellSize),
+                    (float)(c * this.cellSize),
+                    (float)(r * this.cellSize)
+            );
+
+            int cornersRadius = 0;
+
+            canvas.drawRoundRect(
+                    rectF,
+                    (float)cornersRadius,
+                    (float)cornersRadius,
+                    this.obstaclePaintColor
+            );
+        }
+        this.invalidate();
+    }
+
+
+
+}
+
