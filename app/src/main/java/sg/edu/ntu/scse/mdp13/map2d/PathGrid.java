@@ -25,12 +25,10 @@ import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.END_CELL_CODE;
 import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.EXPLORE_CELL_CODE;
 import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.EXPLORE_HEAD_CELL_CODE;
 import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.FINAL_PATH_CELL_CODE;
-import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.OBSTACLE_CELL_CODE;
 import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.START_CELL_CODE;
 
 public final class PathGrid extends View {
     private int pathColor;
-    private int obstacleColor;
     private int startColor;
     private int endColor;
     private int finalPathColor;
@@ -38,7 +36,6 @@ public final class PathGrid extends View {
     private int exploreColor;
     private Paint exploreHeadPaintColor = new Paint();
     private Paint pathPaintColor = new Paint();
-    private Paint obstaclePaintColor = new Paint();
     private Paint startPaintColor = new Paint();
     private Paint finalPathPaintColor = new Paint();
     private Paint endPaintColor = new Paint();
@@ -49,7 +46,6 @@ public final class PathGrid extends View {
     private int turn = 0;
     private boolean isSolving = false;
 
-    public static final int OBSTACLE_BLOCK_TURN = 0;
     public static final int START_BLOCK_TURN = -1;
     public static final int END_BLOCK_TURN = 1;
 
@@ -63,7 +59,6 @@ public final class PathGrid extends View {
                 context.getTheme().obtainStyledAttributes(attrs, styleable.PathGrid, 0, 0);
         try {
             this.pathColor = typedArray.getInteger(R.styleable.PathGrid_gridColor, 0);
-            this.obstacleColor = typedArray.getInteger(R.styleable.PathGrid_obstacleColor, 0);
             this.startColor = typedArray.getInteger(R.styleable.PathGrid_startColor, 0);
             this.endColor = typedArray.getInteger(R.styleable.PathGrid_endColor, 0);
             this.exploreColor = typedArray.getInteger(R.styleable.PathGrid_exploreColor, 0);
@@ -90,16 +85,8 @@ public final class PathGrid extends View {
         this.setPaint(this.pathPaintColor, this.pathColor);
         this.drawGrid(canvas);
 
-        this.setPaint(this.obstaclePaintColor, this.obstacleColor);
-        this.colorObstacleCell(canvas, this._finder.getObstacleY(), this._finder.getObstacleX());
-
         for(int i = 1; i <= 15; ++i) {
             for(int j = 1; j <= 15; ++j) {
-                if (this._finder.getBoard()[i][j] == OBSTACLE_CELL_CODE) {
-                    this.setPaint(this.obstaclePaintColor, this.obstacleColor);
-                    this.colorObstacleCell(canvas, i, j);
-                }
-
                 if (this._finder.getBoard()[i][j] == EXPLORE_CELL_CODE) {
                     this.setPaint(this.explorePaintColor, this.exploreColor);
                     this.colorCell(canvas, i, j, 12.0F, this.explorePaintColor);
@@ -187,26 +174,12 @@ public final class PathGrid extends View {
                     y = (int) (ceil(eventY / cellSize));
                     x = (int) (ceil(eventX / cellSize));
 
-                    this.turn =
-                            x == this._finder.getEndX() && y == this._finder.getEndY()
-                                    ? END_BLOCK_TURN
-                                    : ((x == this._finder.getStartX() && y == this._finder.getStartY()) ||
+                    this.turn = ((x == this._finder.getStartX() && y == this._finder.getStartY()) ||
                                     (x == this._finder.getStartX() && y == this._finder.getStartY()+1) ||
                                     (x == this._finder.getStartX()+1 && y == this._finder.getStartY()) ||
                                     (x == this._finder.getStartX()+1 && y == this._finder.getStartY()+1))
-                                    // TODO: Fix Start "eat up" Obstacle
-//                                    (x == this._finder.getStartX()-1 && y == this._finder.getStartY()-1) ||
-//                                    (x == this._finder.getStartX()-1 && y == this._finder.getStartY()+1) ||
-//                                    (x == this._finder.getStartX()-1 && y == this._finder.getStartY()) ||
-//                                    (x == this._finder.getStartX()+1 && y == this._finder.getStartY()-1) ||
-//                                    (x == this._finder.getStartX() && y == this._finder.getStartY()-1))
                                     ? START_BLOCK_TURN
-                                    : OBSTACLE_BLOCK_TURN;
-                    if (this.turn == OBSTACLE_BLOCK_TURN) {
-                        this.moveCell(x, y, this.turn, 1);
-                    } else {
-                        this.moveCell(x, y, this.turn, 0);
-                    }
+                                    : END_BLOCK_TURN;
                     break;
                 // MOVE CELL 1 by 1
                 case MotionEvent.ACTION_MOVE:
@@ -245,54 +218,14 @@ public final class PathGrid extends View {
         // MOVE RED END/TARGET BLOCK
         } else if (turn == END_BLOCK_TURN) {
             if (x >= 1 && y >= 1 && x <= 15 && y <= 15 &&
-                (this._finder.getBoard()[y][x] == EMPTY_CELL_CODE)
+                    (this._finder.getBoard()[y][x] == EMPTY_CELL_CODE)
             ) {
                 this._finder.getBoard()[this._finder.getEndY()][this._finder.getEndX()] = EMPTY_CELL_CODE;
                 this._finder.setEndX(x);
                 this._finder.setEndY(y);
                 this._finder.getBoard()[this._finder.getEndY()][this._finder.getEndX()] = END_CELL_CODE;
             }
-        // PLACE/UNPLACE OBSTACLE
-        } else {
-            if (x >= 1 && y >= 1 && x <= 15 && y <= 15 &&
-                    (x != this._finder.getStartX() || y != this._finder.getStartY() ||
-                     x != this._finder.getStartX()+1 || y != this._finder.getStartY()+1) &&
-                    (x != this._finder.getEndX() || y != this._finder.getEndY()) &&
-                    (abs(x - this._finder.getObstacleX()) >= 1 || abs(y - this._finder.getObstacleY()) >= 1 || firstTouch == 1)
-            ) {
-                if (this._finder.getBoard()[y][x] == EMPTY_CELL_CODE) {
-                    this._finder.setObstacleX(x);
-                    this._finder.setObstacleY(y);
-                    this._finder.getBoard()[y][x] = OBSTACLE_CELL_CODE;
-                } else if (this._finder.getBoard()[y][x] == OBSTACLE_CELL_CODE) {
-                    this._finder.setObstacleX(x);
-                    this._finder.setObstacleY(y);
-                    this._finder.getBoard()[y][x] = EMPTY_CELL_CODE;
-                }
-            }
         }
-
-    }
-
-    private void colorObstacleCell(Canvas canvas, int r, int c) {
-        if (r != -1 && c != -1 && this._finder.getBoard()[r][c] == OBSTACLE_CELL_CODE) {
-            RectF rectF = new RectF(
-                    (float)((c - 1) * this.cellSize),
-                    (float)((r - 1) * this.cellSize),
-                    (float)(c * this.cellSize),
-                    (float)(r * this.cellSize)
-            );
-
-            int cornersRadius = 0;
-
-            canvas.drawRoundRect(
-                    rectF,
-                    (float)cornersRadius,
-                    (float)cornersRadius,
-                    this.obstaclePaintColor
-            );
-        }
-        this.invalidate();
     }
 
     public final void setSolving(boolean flag) {

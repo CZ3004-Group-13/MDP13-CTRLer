@@ -5,8 +5,6 @@ public class PathFinder {
     int startY = 1;
     int endX = 15;
     int endY = 15;
-    int obstacleX = 8;
-    int obstacleY = 8;
 
     private int rows = 16;
     private int cols = 16;
@@ -15,7 +13,6 @@ public class PathFinder {
 
     public static final int EMPTY_CELL_CODE = 0;
     public static final int START_CELL_CODE = 1;
-    public static final int OBSTACLE_CELL_CODE = 2;
     public static final int END_CELL_CODE = 3;
     public static final int EXPLORE_CELL_CODE = 4;
     public static final int EXPLORE_HEAD_CELL_CODE = 5;
@@ -25,7 +22,6 @@ public class PathFinder {
         super();
 
         board[1][1] = START_CELL_CODE; //for Start
-        board[8][8] = OBSTACLE_CELL_CODE; //for obstacle
         board[15][15] = END_CELL_CODE; //for End
     }
 
@@ -44,10 +40,7 @@ public class PathFinder {
         this.startY = 1;
         this.endX = 15;
         this.endY = 15;
-        this.obstacleX = 8;
-        this.obstacleY = 8;
         this.board[1][1] = 1;
-        this.board[8][8] = 2;
         this.board[15][15] = 3;
     }
 
@@ -99,22 +92,6 @@ public class PathFinder {
 
     public void setEndY(int endY) {
         this.endY = endY;
-    }
-
-    public int getObstacleX() {
-        return obstacleX;
-    }
-
-    public void setObstacleX(int obstacleX) {
-        this.obstacleX = obstacleX;
-    }
-
-    public int getObstacleY() {
-        return obstacleY;
-    }
-
-    public void setObstacleY(int obstacleY) {
-        this.obstacleY = obstacleY;
     }
 
     public int[][] getBoard() {
