@@ -233,9 +233,11 @@ public final class GridMapController extends View {
 
     private void drawGridNumber(Canvas canvas) {
         float halfSize = this.cellSize * 0.38f;
-        for (int x = 0; x < 20; ++x) {
-            canvas.drawText(Integer.toString(x), this.cellSize * x + halfSize, halfSize, endPaintColor);
-            canvas.drawText(Integer.toString(x), halfSize, this.cellSize * x + halfSize, endPaintColor);
+        for (int x = 19; x >= 0; --x) {
+            // Left Vertical
+            canvas.drawText(Integer.toString(x), this.cellSize * x + halfSize, this.cellSize * 19.6f, endPaintColor);
+            // Bottom Horizontal
+            canvas.drawText(Integer.toString(19-x), halfSize, this.cellSize * x + halfSize * 1.5f, endPaintColor);
         }
     }
 }
