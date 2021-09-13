@@ -32,65 +32,6 @@
 
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/pathGrid"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_top">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:fontFamily="@font/open_sans_light"
-            android:text="@string/algorithm"
-            android:textAllCaps="false"
-            android:textColor="#EAEAEA"
-            android:textSize="15sp" />
-
-        <Spinner
-            android:id="@+id/algo_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:popupBackground="#2C2C2C"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar_top" />
-
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/pathGrid"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_top">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:fontFamily="@font/open_sans_light"
-            android:text="@string/speed"
-            android:textAllCaps="false"
-            android:textColor="#EAEAEA"
-            android:textSize="15sp" />
-
-        <Spinner
-            android:id="@+id/speed_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:popupBackground="#2C2C2C"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar_top" />
-
-
-    </LinearLayout>
-
-
     <sg.edu.ntu.scse.mdp13.map2d.PathGrid
         android:id="@+id/pathGrid"
         android:layout_width="wrap_content"
@@ -109,23 +50,6 @@
         custom:startColor="#CB04ADFF" />
 
     <Button
-        android:id="@+id/btn_solve"
-        style="?attr/materialButtonOutlinedStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/open_sans_light"
-        android:text="@string/solve"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-        android:textColor="@drawable/button_text_color"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pathGrid"
-        app:rippleColor="#FFECB3"
-        app:strokeColor="#6E6E6E"
-        custom:layout_constraintBottom_toBottomOf="parent" />
-
-    <Button
         android:id="@+id/btn_reset"
         style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
@@ -135,7 +59,8 @@
         android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
         android:textColor="@drawable/button_text_color"
         android:textStyle="bold"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btn_solve"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/pathGrid"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:rippleColor="#FFECB3"

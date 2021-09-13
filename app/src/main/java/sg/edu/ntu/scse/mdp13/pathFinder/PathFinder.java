@@ -1,10 +1,5 @@
 package sg.edu.ntu.scse.mdp13.pathFinder;
 
-import android.util.Log;
-
-import sg.edu.ntu.scse.mdp13.pathFinder.BFS;
-import sg.edu.ntu.scse.mdp13.pathFinder.DFS;
-
 public class PathFinder {
     int startX = 1;
     int startY = 1;
@@ -54,47 +49,6 @@ public class PathFinder {
         this.board[1][1] = 1;
         this.board[8][8] = 2;
         this.board[15][15] = 3;
-    }
-
-    public boolean solveBFS(long speed) {
-        clearCells();
-        BFS bfs = new BFS(rows, cols);
-        bfs.solve(board, startX, startY, endX, endY, speed);
-        return drawSolution(bfs.getPath());
-    }
-
-    public boolean solveDFS(long speed) {
-        clearCells();
-
-        DFS dfs = new DFS(rows, cols);
-        dfs.solve(speed, startX, startY, endX, endY, board);
-        return drawSolution(dfs.getPath());
-
-    }
-
-    /*
-     *this function traces back the path
-     */
-    private boolean drawSolution(char[][] path) {
-        int i = endX;
-        int j = endY;
-
-        if (path[j][i] == 'O') return false;
-        while (path[j][i] != 'O') {
-            //delay(20);
-            switch (path[j][i]) {
-                case 'U': j--;
-                    break;
-                case 'D': j++;
-                    break;
-                case 'L': i--;
-                    break;
-                default:
-                    i++;
-            }
-            board[j][i] = FINAL_PATH_CELL_CODE;
-        }
-        return true;
     }
 
     /*
