@@ -74,7 +74,7 @@ public final class GridMapController extends View {
         int height = MeasureSpec.getSize(heightMeasureSpec);
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int dimension = Math.min(height, width);
-        this.cellSize = dimension / 15;
+        this.cellSize = dimension / 20;
         this.setMeasuredDimension(dimension, dimension);
     }
 
@@ -83,9 +83,10 @@ public final class GridMapController extends View {
 
         this.setPaint(this.pathPaintColor, this.pathColor);
         this.drawGrid(canvas);
+        this.drawGridNumber(canvas);
 
-        for(int i = 1; i <= 15; ++i) {
-            for(int j = 1; j <= 15; ++j) {
+        for(int i = 1; i < 20; ++i) {
+            for(int j = 1; j < 20; ++j) {
                 if (this._map.getBoard()[i][j] == EXPLORE_CELL_CODE) {
                     this.setPaint(this.explorePaintColor, this.exploreColor);
                     this.colorCell(canvas, i, j, 12.0F, this.explorePaintColor);
@@ -142,8 +143,8 @@ public final class GridMapController extends View {
     }
 
     private final void drawGrid(Canvas canvas) {
-        for(int i = 1; i <= 15; ++i) {
-            for(int j = 1; j <= 15; ++j) {
+        for(int i = 0; i <= 20; ++i) {
+            for(int j = 0; j <= 20; ++j) {
                 RectF rectF = new RectF(
                         (float)((j - 1) * this.cellSize) + (float)1,
                         (float)((i - 1) * this.cellSize) + (float)1,
@@ -196,33 +197,35 @@ public final class GridMapController extends View {
 
     private void moveCell(int x, int y, int turn, int firstTouch) throws ArrayIndexOutOfBoundsException {
         // MOVE BLUE START/ROBOT BLOCK
+        boolean isInGrid = x >= 1 && y >= 1 && x+1 <= 20 && y+1 <= 20;
         if (turn == START_BLOCK_TURN) {
-            if (x >= 1 && y >= 1 && x+1 <= 15 && y+1 <= 15 &&
-                    (this._map.getBoard()[y][x] == EMPTY_CELL_CODE)
+            if (isInGrid && (this._map.getBoard()[x][y] == EMPTY_CELL_CODE)
+                && (this._map.getBoard()[x][y] != END_CELL_CODE) && (this._map.getBoard()[x+1][y+1] != END_CELL_CODE)
+                && (this._map.getBoard()[x][y+1] != END_CELL_CODE) && (this._map.getBoard()[x+1][y] != END_CELL_CODE)
             ) {
 
-                this._map.getBoard()[this._map.getStartY()][this._map.getStartX()] = EMPTY_CELL_CODE;
-                this._map.getBoard()[this._map.getStartY()][this._map.getStartX()+1] = EMPTY_CELL_CODE;
-                this._map.getBoard()[this._map.getStartY()+1][this._map.getStartX()] = EMPTY_CELL_CODE;
-                this._map.getBoard()[this._map.getStartY()+1][this._map.getStartX()+1] = EMPTY_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()] = EMPTY_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()+1] = EMPTY_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()] = EMPTY_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()+1] = EMPTY_CELL_CODE;
 
                 this._map.setStartX(x);
                 this._map.setStartY(y);
 
-                this._map.getBoard()[this._map.getStartY()][this._map.getStartX()] = START_CELL_CODE;
-                this._map.getBoard()[this._map.getStartY()][this._map.getStartX()+1] = START_CELL_CODE;
-                this._map.getBoard()[this._map.getStartY()+1][this._map.getStartX()] = START_CELL_CODE;
-                this._map.getBoard()[this._map.getStartY()+1][this._map.getStartX()+1] = START_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()] = START_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()+1] = START_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()] = START_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()+1] = START_CELL_CODE;
             }
         // MOVE RED END/TARGET BLOCK
         } else if (turn == END_BLOCK_TURN) {
-            if (x >= 1 && y >= 1 && x <= 15 && y <= 15 &&
-                    (this._map.getBoard()[y][x] == EMPTY_CELL_CODE)
+            if (isInGrid && (this._map.getBoard()[x][y] == EMPTY_CELL_CODE)
+                && (this._map.getBoard()[x][y] != START_CELL_CODE)
             ) {
-                this._map.getBoard()[this._map.getEndY()][this._map.getEndX()] = EMPTY_CELL_CODE;
+                this._map.getBoard()[this._map.getEndX()][this._map.getEndY()] = EMPTY_CELL_CODE;
                 this._map.setEndX(x);
                 this._map.setEndY(y);
-                this._map.getBoard()[this._map.getEndY()][this._map.getEndX()] = END_CELL_CODE;
+                this._map.getBoard()[this._map.getEndX()][this._map.getEndY()] = END_CELL_CODE;
             }
         }
     }
@@ -231,5 +234,12 @@ public final class GridMapController extends View {
         this.isSolving = flag;
     }
 
+    private void drawGridNumber(Canvas canvas) {
+        float halfSize = this.cellSize * 0.38f;
+        for (int x = 0; x < 20; ++x) {
+            canvas.drawText(Integer.toString(x), this.cellSize * x + halfSize, halfSize, endPaintColor);
+            canvas.drawText(Integer.toString(x), halfSize, this.cellSize * x + halfSize, endPaintColor);
+        }
+    }
 }
 
