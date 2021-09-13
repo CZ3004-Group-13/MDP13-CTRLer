@@ -26,19 +26,21 @@ import static sg.edu.ntu.scse.mdp13.map.GridMap.EXPLORE_HEAD_CELL_CODE;
 import static sg.edu.ntu.scse.mdp13.map.GridMap.FINAL_PATH_CELL_CODE;
 import static sg.edu.ntu.scse.mdp13.map.GridMap.START_CELL_CODE;
 
-public final class GridMapController extends View {
+public final class GridMapCanvas extends View {
     private int pathColor;
     private int startColor;
     private int endColor;
     private int finalPathColor;
     private int exploreHeadColor;
     private int exploreColor;
+    private int obstacleColor;
     private Paint exploreHeadPaintColor = new Paint();
     private Paint pathPaintColor = new Paint();
     private Paint startPaintColor = new Paint();
     private Paint finalPathPaintColor = new Paint();
     private Paint endPaintColor = new Paint();
     private Paint explorePaintColor = new Paint();
+    private Paint obstaclePaintColor = new Paint();
 
     private int cellSize = 0;
     private GridMap _map = new GridMap();
@@ -48,11 +50,11 @@ public final class GridMapController extends View {
     public static final int START_BLOCK_TURN = -1;
     public static final int END_BLOCK_TURN = 1;
 
-    public GridMapController(Context context) {
+    public GridMapCanvas(Context context) {
         super(context);
     }
 
-    public GridMapController(Context context, @Nullable AttributeSet attrs) {
+    public GridMapCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         TypedArray typedArray =
                 context.getTheme().obtainStyledAttributes(attrs, styleable.PathGrid, 0, 0);
@@ -63,6 +65,7 @@ public final class GridMapController extends View {
             this.exploreColor = typedArray.getInteger(R.styleable.PathGrid_exploreColor, 0);
             this.exploreHeadColor = typedArray.getInteger(R.styleable.PathGrid_exploreHeadColor, 0);
             this.finalPathColor = typedArray.getInteger(R.styleable.PathGrid_finalPathColor, 0);
+            this.obstacleColor = typedArray.getInteger(styleable.PathGrid_obstacleColor, 0);
         } finally {
             typedArray.recycle();
         }
@@ -105,17 +108,13 @@ public final class GridMapController extends View {
             }
         }
 
-        this.setPaint(this.startPaintColor, this.startColor);
-        this.colorCell(canvas, this._map.getStartY(), this._map.getStartX(), 5.0F, this.startPaintColor);
-        this.colorCell(canvas, this._map.getStartY(), this._map.getStartX()+1, 5.0F, this.startPaintColor);
-        this.colorCell(canvas, this._map.getStartY()+1, this._map.getStartX(), 5.0F, this.startPaintColor);
-        this.colorCell(canvas, this._map.getStartY()+1, this._map.getStartX()+1, 5.0F, this.startPaintColor);
+        this.drawCar(canvas);
 
         this.setPaint(this.endPaintColor, this.endColor);
         this.colorCell(canvas, this._map.getEndY(), this._map.getEndX(), 5.0F, this.endPaintColor);
     }
 
-    private final void colorCell(Canvas canvas, int r, int c, float radius, Paint paintColor) {
+    private void colorCell(Canvas canvas, int r, int c, float radius, Paint paintColor) {
         RectF rectF = new RectF(
                 (float)((c - 1) * this.cellSize),
                 (float)((r - 1) * this.cellSize),
@@ -132,7 +131,7 @@ public final class GridMapController extends View {
         this.invalidate();
     }
 
-    private final void setPaint(Paint paintColor, int color) {
+    private void setPaint(Paint paintColor, int color) {
         paintColor.setStyle(Style.FILL);
         paintColor.setColor(color);
         paintColor.setAntiAlias(true);
@@ -142,7 +141,7 @@ public final class GridMapController extends View {
         return this._map;
     }
 
-    private final void drawGrid(Canvas canvas) {
+    private void drawGrid(Canvas canvas) {
         for(int i = 0; i <= 20; ++i) {
             for(int j = 0; j <= 20; ++j) {
                 RectF rectF = new RectF(
@@ -160,6 +159,59 @@ public final class GridMapController extends View {
                 );
             }
         }
+    }
+
+    private void drawGridNumber(Canvas canvas) {
+        float halfSize = this.cellSize * 0.38f;
+        for (int x = 19; x >= 0; --x) {
+            // Left Vertical
+            canvas.drawText(Integer.toString(x), this.cellSize * x + halfSize, this.cellSize * 19.6f, endPaintColor);
+            // Bottom Horizontal
+            canvas.drawText(Integer.toString(19-x), halfSize, this.cellSize * x + halfSize * 1.5f, endPaintColor);
+        }
+    }
+
+    private void drawCar(Canvas canvas) {
+        this.setPaint(this.startPaintColor, this.startColor);
+
+        this.colorCell(canvas, this._map.getStartY(), this._map.getStartX(), 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getStartY(), this._map.getStartX()+1, 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getStartY()+1, this._map.getStartX(), 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getStartY()+1, this._map.getStartX()+1, 5.0F, this.startPaintColor);
+
+        this.setPaint(this.obstaclePaintColor, this.obstacleColor);
+
+
+        // Draw wheels
+        RectF rectF = new RectF(
+                (float)((this._map.getStartX() - 0.75) * this.cellSize), //left
+                (float)((this._map.getStartY() - 0.65) * this.cellSize), //top - bound
+                (float)((this._map.getStartX() - 0.25) * this.cellSize), //right - width
+                (float)((this._map.getStartY() + 0.15) * this.cellSize) //bottom - height
+        );
+
+        canvas.drawRoundRect(
+                rectF, // rect
+                5F, // rx
+                5F, // ry
+                this.obstaclePaintColor // Paint
+        );
+
+        RectF rectv = new RectF(
+                (float)((this._map.getStartX() - 0.75 + 1) * this.cellSize), //left
+                (float)((this._map.getStartY() - 0.65) * this.cellSize), //top - bound
+                (float)((this._map.getStartX() - 0.25 + 1) * this.cellSize), //right - width
+                (float)((this._map.getStartY() + 0.15) * this.cellSize) //bottom - height
+        );
+
+        canvas.drawRoundRect(
+                rectv, // rect
+                5F, // rx
+                5F, // ry
+                this.obstaclePaintColor // Paint
+        );
+
+        this.invalidate();
     }
 
     @SuppressLint({"ClickableViewAccessibility"})
@@ -182,7 +234,7 @@ public final class GridMapController extends View {
                 case MotionEvent.ACTION_MOVE:
                     y = (int) (ceil(eventY / cellSize));
                     x = (int) (ceil(eventX / cellSize));
-                    this.moveCell(x, y, turn, 0);
+                    this.dragCell(x, y, turn, 0);
                     break;
             }
 
@@ -192,7 +244,7 @@ public final class GridMapController extends View {
         return true;
     }
 
-    private void moveCell(int x, int y, int turn, int firstTouch) throws ArrayIndexOutOfBoundsException {
+    private void dragCell(int x, int y, int turn, int firstTouch) throws ArrayIndexOutOfBoundsException {
         // MOVE BLUE START/ROBOT BLOCK
         boolean isInGrid = x >= 1 && y >= 1 && x+1 <= 20 && y+1 <= 20;
         if (turn == START_BLOCK_TURN) {
@@ -229,16 +281,6 @@ public final class GridMapController extends View {
 
     public final void setSolving(boolean flag) {
         this.isSolving = flag;
-    }
-
-    private void drawGridNumber(Canvas canvas) {
-        float halfSize = this.cellSize * 0.38f;
-        for (int x = 19; x >= 0; --x) {
-            // Left Vertical
-            canvas.drawText(Integer.toString(x), this.cellSize * x + halfSize, this.cellSize * 19.6f, endPaintColor);
-            // Bottom Horizontal
-            canvas.drawText(Integer.toString(19-x), halfSize, this.cellSize * x + halfSize * 1.5f, endPaintColor);
-        }
     }
 }
 

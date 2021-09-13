@@ -10,12 +10,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import sg.edu.ntu.scse.mdp13.map.GridMapController;
+import sg.edu.ntu.scse.mdp13.map.GridMapCanvas;
 import sg.edu.ntu.scse.mdp13.map.GridMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    private GridMapController gridMapController;
+    private GridMapCanvas gridMapCanvas;
     private GridMap finder = new GridMap();
 
     @Override
@@ -23,17 +23,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activty_main);
 
-        gridMapController = findViewById(R.id.pathGrid);
-        finder = gridMapController.getFinder();
+        gridMapCanvas = findViewById(R.id.pathGrid);
+        finder = gridMapCanvas.getFinder();
 
         Button btnReset = (Button)this.findViewById(R.id.btn_reset);
 
         btnReset.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                gridMapController.setSolving(false);
+                gridMapCanvas.setSolving(false);
                 finder.resetGrid();
-                gridMapController.invalidate();
+                gridMapCanvas.invalidate();
             }
         });
     }
