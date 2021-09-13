@@ -1,10 +1,10 @@
-package sg.edu.ntu.scse.mdp13.pathFinder;
+package sg.edu.ntu.scse.mdp13.map;
 
-public class PathFinder {
+public class GridMap {
     int startX = 1;
-    int startY = 1;
-    int endX = 15;
-    int endY = 15;
+    int startY = 14;
+    int endX = 8;
+    int endY = 8;
 
     private int rows = 16;
     private int cols = 16;
@@ -18,11 +18,11 @@ public class PathFinder {
     public static final int EXPLORE_HEAD_CELL_CODE = 5;
     public static final int FINAL_PATH_CELL_CODE = 6;
 
-    public PathFinder() {
+    public GridMap() {
         super();
 
-        board[1][1] = START_CELL_CODE; //for Start
-        board[15][15] = END_CELL_CODE; //for End
+        board[1][14] = START_CELL_CODE; //for Start
+        board[8][8] = END_CELL_CODE; //for End
     }
 
     public final void resetGrid() {
@@ -37,9 +37,9 @@ public class PathFinder {
         }
 
         this.startX = 1;
-        this.startY = 1;
-        this.endX = 15;
-        this.endY = 15;
+        this.startY = 14;
+        this.endX = 8;
+        this.endY = 8;
         this.board[1][1] = 1;
         this.board[15][15] = 3;
     }

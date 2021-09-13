@@ -1,4 +1,4 @@
-package sg.edu.ntu.scse.mdp13.map2d;
+package sg.edu.ntu.scse.mdp13.map;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.ceil;
@@ -13,21 +13,20 @@ import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.MeasureSpec;
 
 import androidx.annotation.Nullable;
 
 import sg.edu.ntu.scse.mdp13.R;
 import sg.edu.ntu.scse.mdp13.R.styleable;
-import sg.edu.ntu.scse.mdp13.pathFinder.PathFinder;
-import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.EMPTY_CELL_CODE;
-import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.END_CELL_CODE;
-import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.EXPLORE_CELL_CODE;
-import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.EXPLORE_HEAD_CELL_CODE;
-import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.FINAL_PATH_CELL_CODE;
-import static sg.edu.ntu.scse.mdp13.pathFinder.PathFinder.START_CELL_CODE;
 
-public final class PathGrid extends View {
+import static sg.edu.ntu.scse.mdp13.map.GridMap.EMPTY_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.GridMap.END_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.GridMap.EXPLORE_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.GridMap.EXPLORE_HEAD_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.GridMap.FINAL_PATH_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.GridMap.START_CELL_CODE;
+
+public final class GridMapController extends View {
     private int pathColor;
     private int startColor;
     private int endColor;
@@ -42,18 +41,18 @@ public final class PathGrid extends View {
     private Paint explorePaintColor = new Paint();
 
     private int cellSize = 0;
-    private PathFinder _finder = new PathFinder();
+    private GridMap _map = new GridMap();
     private int turn = 0;
     private boolean isSolving = false;
 
     public static final int START_BLOCK_TURN = -1;
     public static final int END_BLOCK_TURN = 1;
 
-    public PathGrid(Context context) {
+    public GridMapController(Context context) {
         super(context);
     }
 
-    public PathGrid(Context context, @Nullable AttributeSet attrs) {
+    public GridMapController(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         TypedArray typedArray =
                 context.getTheme().obtainStyledAttributes(attrs, styleable.PathGrid, 0, 0);
@@ -87,18 +86,18 @@ public final class PathGrid extends View {
 
         for(int i = 1; i <= 15; ++i) {
             for(int j = 1; j <= 15; ++j) {
-                if (this._finder.getBoard()[i][j] == EXPLORE_CELL_CODE) {
+                if (this._map.getBoard()[i][j] == EXPLORE_CELL_CODE) {
                     this.setPaint(this.explorePaintColor, this.exploreColor);
                     this.colorCell(canvas, i, j, 12.0F, this.explorePaintColor);
                 }
 
                 // EXPLORE ANIMATION HEAD
-                if (this._finder.getBoard()[i][j] == EXPLORE_HEAD_CELL_CODE) {
+                if (this._map.getBoard()[i][j] == EXPLORE_HEAD_CELL_CODE) {
                     this.setPaint(this.exploreHeadPaintColor, this.exploreHeadColor);
                     this.colorCell(canvas, i, j, 0.0F, this.exploreHeadPaintColor);
                 }
 
-                if (this._finder.getBoard()[i][j] == FINAL_PATH_CELL_CODE) {
+                if (this._map.getBoard()[i][j] == FINAL_PATH_CELL_CODE) {
                     this.setPaint(this.finalPathPaintColor, this.finalPathColor);
                     this.colorCell(canvas, i, j, 12.0F, this.finalPathPaintColor);
                 }
@@ -106,13 +105,13 @@ public final class PathGrid extends View {
         }
 
         this.setPaint(this.startPaintColor, this.startColor);
-        this.colorCell(canvas, this._finder.getStartY(), this._finder.getStartX(), 5.0F, this.startPaintColor);
-        this.colorCell(canvas, this._finder.getStartY(), this._finder.getStartX()+1, 5.0F, this.startPaintColor);
-        this.colorCell(canvas, this._finder.getStartY()+1, this._finder.getStartX(), 5.0F, this.startPaintColor);
-        this.colorCell(canvas, this._finder.getStartY()+1, this._finder.getStartX()+1, 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getStartY(), this._map.getStartX(), 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getStartY(), this._map.getStartX()+1, 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getStartY()+1, this._map.getStartX(), 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getStartY()+1, this._map.getStartX()+1, 5.0F, this.startPaintColor);
 
         this.setPaint(this.endPaintColor, this.endColor);
-        this.colorCell(canvas, this._finder.getEndY(), this._finder.getEndX(), 5.0F, this.endPaintColor);
+        this.colorCell(canvas, this._map.getEndY(), this._map.getEndX(), 5.0F, this.endPaintColor);
     }
 
     private final void colorCell(Canvas canvas, int r, int c, float radius, Paint paintColor) {
@@ -138,8 +137,8 @@ public final class PathGrid extends View {
         paintColor.setAntiAlias(true);
     }
 
-    public final PathFinder getFinder() {
-        return this._finder;
+    public final GridMap getFinder() {
+        return this._map;
     }
 
     private final void drawGrid(Canvas canvas) {
@@ -174,10 +173,10 @@ public final class PathGrid extends View {
                     y = (int) (ceil(eventY / cellSize));
                     x = (int) (ceil(eventX / cellSize));
 
-                    this.turn = ((x == this._finder.getStartX() && y == this._finder.getStartY()) ||
-                                    (x == this._finder.getStartX() && y == this._finder.getStartY()+1) ||
-                                    (x == this._finder.getStartX()+1 && y == this._finder.getStartY()) ||
-                                    (x == this._finder.getStartX()+1 && y == this._finder.getStartY()+1))
+                    this.turn = ((x == this._map.getStartX() && y == this._map.getStartY()) ||
+                                    (x == this._map.getStartX() && y == this._map.getStartY()+1) ||
+                                    (x == this._map.getStartX()+1 && y == this._map.getStartY()) ||
+                                    (x == this._map.getStartX()+1 && y == this._map.getStartY()+1))
                                     ? START_BLOCK_TURN
                                     : END_BLOCK_TURN;
                     break;
@@ -199,31 +198,31 @@ public final class PathGrid extends View {
         // MOVE BLUE START/ROBOT BLOCK
         if (turn == START_BLOCK_TURN) {
             if (x >= 1 && y >= 1 && x+1 <= 15 && y+1 <= 15 &&
-                    (this._finder.getBoard()[y][x] == EMPTY_CELL_CODE)
+                    (this._map.getBoard()[y][x] == EMPTY_CELL_CODE)
             ) {
 
-                this._finder.getBoard()[this._finder.getStartY()][this._finder.getStartX()] = EMPTY_CELL_CODE;
-                this._finder.getBoard()[this._finder.getStartY()][this._finder.getStartX()+1] = EMPTY_CELL_CODE;
-                this._finder.getBoard()[this._finder.getStartY()+1][this._finder.getStartX()] = EMPTY_CELL_CODE;
-                this._finder.getBoard()[this._finder.getStartY()+1][this._finder.getStartX()+1] = EMPTY_CELL_CODE;
+                this._map.getBoard()[this._map.getStartY()][this._map.getStartX()] = EMPTY_CELL_CODE;
+                this._map.getBoard()[this._map.getStartY()][this._map.getStartX()+1] = EMPTY_CELL_CODE;
+                this._map.getBoard()[this._map.getStartY()+1][this._map.getStartX()] = EMPTY_CELL_CODE;
+                this._map.getBoard()[this._map.getStartY()+1][this._map.getStartX()+1] = EMPTY_CELL_CODE;
 
-                this._finder.setStartX(x);
-                this._finder.setStartY(y);
+                this._map.setStartX(x);
+                this._map.setStartY(y);
 
-                this._finder.getBoard()[this._finder.getStartY()][this._finder.getStartX()] = START_CELL_CODE;
-                this._finder.getBoard()[this._finder.getStartY()][this._finder.getStartX()+1] = START_CELL_CODE;
-                this._finder.getBoard()[this._finder.getStartY()+1][this._finder.getStartX()] = START_CELL_CODE;
-                this._finder.getBoard()[this._finder.getStartY()+1][this._finder.getStartX()+1] = START_CELL_CODE;
+                this._map.getBoard()[this._map.getStartY()][this._map.getStartX()] = START_CELL_CODE;
+                this._map.getBoard()[this._map.getStartY()][this._map.getStartX()+1] = START_CELL_CODE;
+                this._map.getBoard()[this._map.getStartY()+1][this._map.getStartX()] = START_CELL_CODE;
+                this._map.getBoard()[this._map.getStartY()+1][this._map.getStartX()+1] = START_CELL_CODE;
             }
         // MOVE RED END/TARGET BLOCK
         } else if (turn == END_BLOCK_TURN) {
             if (x >= 1 && y >= 1 && x <= 15 && y <= 15 &&
-                    (this._finder.getBoard()[y][x] == EMPTY_CELL_CODE)
+                    (this._map.getBoard()[y][x] == EMPTY_CELL_CODE)
             ) {
-                this._finder.getBoard()[this._finder.getEndY()][this._finder.getEndX()] = EMPTY_CELL_CODE;
-                this._finder.setEndX(x);
-                this._finder.setEndY(y);
-                this._finder.getBoard()[this._finder.getEndY()][this._finder.getEndX()] = END_CELL_CODE;
+                this._map.getBoard()[this._map.getEndY()][this._map.getEndX()] = EMPTY_CELL_CODE;
+                this._map.setEndX(x);
+                this._map.setEndY(y);
+                this._map.getBoard()[this._map.getEndY()][this._map.getEndX()] = END_CELL_CODE;
             }
         }
     }

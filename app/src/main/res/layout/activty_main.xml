@@ -32,7 +32,7 @@
 
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <sg.edu.ntu.scse.mdp13.map2d.PathGrid
+    <sg.edu.ntu.scse.mdp13.map.GridMapController
         android:id="@+id/pathGrid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
