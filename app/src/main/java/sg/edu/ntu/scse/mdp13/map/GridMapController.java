@@ -174,12 +174,9 @@ public final class GridMapController extends View {
                     y = (int) (ceil(eventY / cellSize));
                     x = (int) (ceil(eventX / cellSize));
 
-                    this.turn = ((x == this._map.getStartX() && y == this._map.getStartY()) ||
-                                    (x == this._map.getStartX() && y == this._map.getStartY()+1) ||
-                                    (x == this._map.getStartX()+1 && y == this._map.getStartY()) ||
-                                    (x == this._map.getStartX()+1 && y == this._map.getStartY()+1))
-                                    ? START_BLOCK_TURN
-                                    : END_BLOCK_TURN;
+                    this.turn = (x == this._map.getEndX() && y == this._map.getEndY())
+                                    ? END_BLOCK_TURN
+                                    : START_BLOCK_TURN;
                     break;
                 // MOVE CELL 1 by 1
                 case MotionEvent.ACTION_MOVE:
