@@ -11,12 +11,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import sg.edu.ntu.scse.mdp13.map.GridMapCanvas;
-import sg.edu.ntu.scse.mdp13.map.GridMap;
+import sg.edu.ntu.scse.mdp13.map.BoardMap;
 
 public class MainActivity extends AppCompatActivity {
 
     private GridMapCanvas gridMapCanvas;
-    private GridMap finder = new GridMap();
+    private BoardMap finder = new BoardMap();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

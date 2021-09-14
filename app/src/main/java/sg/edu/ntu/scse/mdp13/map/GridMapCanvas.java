@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
@@ -20,12 +19,16 @@ import androidx.annotation.Nullable;
 import sg.edu.ntu.scse.mdp13.R;
 import sg.edu.ntu.scse.mdp13.R.styleable;
 
-import static sg.edu.ntu.scse.mdp13.map.GridMap.EMPTY_CELL_CODE;
-import static sg.edu.ntu.scse.mdp13.map.GridMap.TARGET_CELL_CODE;
-import static sg.edu.ntu.scse.mdp13.map.GridMap.EXPLORE_CELL_CODE;
-import static sg.edu.ntu.scse.mdp13.map.GridMap.EXPLORE_HEAD_CELL_CODE;
-import static sg.edu.ntu.scse.mdp13.map.GridMap.FINAL_PATH_CELL_CODE;
-import static sg.edu.ntu.scse.mdp13.map.GridMap.ROBO_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.BoardMap.EMPTY_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.BoardMap.TARGET_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.BoardMap.EXPLORE_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.BoardMap.EXPLORE_HEAD_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.BoardMap.FINAL_PATH_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.BoardMap.CAR_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.BoardMap.TARGET_FACE_NORTH;
+import static sg.edu.ntu.scse.mdp13.map.BoardMap.TARGET_FACE_EAST;
+import static sg.edu.ntu.scse.mdp13.map.BoardMap.TARGET_FACE_WEST;
+import static sg.edu.ntu.scse.mdp13.map.BoardMap.TARGET_FACE_SOUTH;
 
 public final class GridMapCanvas extends View {
     private int pathColor;
@@ -46,11 +49,11 @@ public final class GridMapCanvas extends View {
     private Paint tarNumPaintColor = new Paint();
 
     private int cellSize = 0;
-    private GridMap _map = new GridMap();
+    private BoardMap _map = new BoardMap();
     private int turn = 0;
     private boolean isSolving = false;
 
-    public static final int ROBO_BLOCK_TURN = -1;
+    public static final int CAR_BLOCK_TURN = -1;
     public static final int TARGET_BLOCK_TURN = 1;
 
     public GridMapCanvas(Context context) {
@@ -114,7 +117,7 @@ public final class GridMapCanvas extends View {
 
         this.drawCar(canvas);
 
-        this.drawTarget(canvas);
+        this.drawTarget(canvas, _map.getTargetN());
     }
 
     private void colorCell(Canvas canvas, int r, int c, float radius, Paint paintColor) {
@@ -140,7 +143,7 @@ public final class GridMapCanvas extends View {
         paintColor.setAntiAlias(true);
     }
 
-    public final GridMap getFinder() {
+    public final BoardMap getFinder() {
         return this._map;
     }
 
@@ -217,16 +220,16 @@ public final class GridMapCanvas extends View {
         this.invalidate();
     }
 
-    private void drawTarget(Canvas canvas) {
+    private void drawTarget(Canvas canvas, int tarNum) {
         int x = this._map.getEndX();
         int y = this._map.getEndY();
-        int halfWidth = this.cellSize / 2;
+
         this.setPaint(this.endPaintColor, this.endColor);
         this.colorCell(canvas, y, x, 5.0F, this.endPaintColor);
 
         this.setPaint(this.tarNumPaintColor, this.tarNumColor);
 
-        canvas.drawText(Integer.toString(1),
+        canvas.drawText(Integer.toString(tarNum),
                 this.cellSize * (x-1) + this.cellSize * 0.4f,
                 this.cellSize * y - this.cellSize*0.4f,
                 tarNumPaintColor
@@ -234,20 +237,42 @@ public final class GridMapCanvas extends View {
 
         this.setPaint(this.startPaintColor, this.startColor);
 
-        RectF dirFace = new RectF(
-                (float)((this._map.getEndX() - 1) * this.cellSize), //left
-                (float)((this._map.getEndY() - 0.9) * this.cellSize), //top - bound
-                (float)(this._map.getEndX() * this.cellSize), //right - width
-                (float)((this._map.getEndY() - 1) * this.cellSize) //bottom - height
-        );
+        float leftBound = 0, topBound = 0, rightBound = 0, bottomBound = 0;
+        if (_map.getTargetF() == TARGET_FACE_NORTH) {
+            leftBound = -1;
+            topBound = -0.9f;
+            rightBound = 0;
+            bottomBound = -1;
+        } else if (_map.getTargetF() == TARGET_FACE_EAST) {
+            leftBound = -0.1f;
+            topBound = -1;
+            rightBound = 0;
+            bottomBound = 0;
+        } else if (_map.getTargetF() == TARGET_FACE_SOUTH) {
+            leftBound = -1;
+            topBound = -0.1f;
+            rightBound = 0;
+            bottomBound = 0;
+        } else if (_map.getTargetF() == TARGET_FACE_WEST) {
+            leftBound = -1;
+            topBound = -1;
+            rightBound = -0.9f;
+            bottomBound = 0;
+        }
 
+        RectF fRect = new RectF(
+                (float)((this._map.getEndX() + leftBound) * this.cellSize), //left
+                (float)((this._map.getEndY() + topBound) * this.cellSize), //top
+                (float)((this._map.getEndX() + rightBound) * this.cellSize), //right
+                (float)((this._map.getEndY() + bottomBound) * this.cellSize) //bottom
+        );
         canvas.drawRoundRect(
-                dirFace, // rect
+                fRect, // rect
                 5F, // rx
                 5F, // ry
                 this.startPaintColor // Paint
         );
-
+        this.invalidate();
     }
     
     @SuppressLint({"ClickableViewAccessibility"})
@@ -264,7 +289,11 @@ public final class GridMapCanvas extends View {
 
                     this.turn = (x == this._map.getEndX() && y == this._map.getEndY())
                                     ? TARGET_BLOCK_TURN
-                                    : ROBO_BLOCK_TURN;
+                                    : CAR_BLOCK_TURN;
+
+                    if (this.turn == TARGET_BLOCK_TURN)
+                        this._map.toggleTargetFace(1); // Rotate clockwise
+
                     break;
                 // MOVE CELL 1 by 1
                 case MotionEvent.ACTION_MOVE:
@@ -281,9 +310,9 @@ public final class GridMapCanvas extends View {
     }
 
     private void dragCell(int x, int y, int turn, int firstTouch) throws ArrayIndexOutOfBoundsException {
-        // MOVE BLUE ROBO/ROBOT BLOCK
+        // MOVE BLUE START BLOCK
         boolean isInGrid = x >= 1 && y >= 1 && x+1 <= 20 && y+1 <= 20;
-        if (turn == ROBO_BLOCK_TURN) {
+        if (turn == CAR_BLOCK_TURN) {
             if (isInGrid && (this._map.getBoard()[x][y] == EMPTY_CELL_CODE)
                 && (this._map.getBoard()[x][y] != TARGET_CELL_CODE) && (this._map.getBoard()[x+1][y+1] != TARGET_CELL_CODE)
                 && (this._map.getBoard()[x][y+1] != TARGET_CELL_CODE) && (this._map.getBoard()[x+1][y] != TARGET_CELL_CODE)
@@ -297,15 +326,15 @@ public final class GridMapCanvas extends View {
                 this._map.setStartX(x);
                 this._map.setStartY(y);
 
-                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()] = ROBO_CELL_CODE;
-                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()+1] = ROBO_CELL_CODE;
-                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()] = ROBO_CELL_CODE;
-                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()+1] = ROBO_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()] = CAR_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()+1] = CAR_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()] = CAR_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()+1] = CAR_CELL_CODE;
             }
-        // MOVE RED TARGET/TARGET BLOCK
+        // MOVE RED TARGET BLOCK
         } else if (turn == TARGET_BLOCK_TURN) {
             if (isInGrid && (this._map.getBoard()[x][y] == EMPTY_CELL_CODE)
-                && (this._map.getBoard()[x][y] != ROBO_CELL_CODE)
+                && (this._map.getBoard()[x][y] != CAR_CELL_CODE)
             ) {
                 this._map.getBoard()[this._map.getEndX()][this._map.getEndY()] = EMPTY_CELL_CODE;
                 this._map.setEndX(x);
