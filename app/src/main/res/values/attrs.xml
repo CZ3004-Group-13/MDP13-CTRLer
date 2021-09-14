@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="PathGrid">
+    <declare-styleable name="GridMap">
         <attr name="gridColor" format="color" />
-        <attr name="obstacleColor" format="color" />
-        <attr name="startColor" format="color" />
-        <attr name="endColor" format="color" />
+        <attr name="wheelColor" format="color" />
+        <attr name="roboColor" format="color" />
+        <attr name="targetColor" format="color" />
+        <attr name="tarNumColor" format="color" />
         <attr name="exploreColor" format="color" />
         <attr name="exploreHeadColor" format="color" />
         <attr name="finalPathColor" format="color" />

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
@@ -20,11 +21,11 @@ import sg.edu.ntu.scse.mdp13.R;
 import sg.edu.ntu.scse.mdp13.R.styleable;
 
 import static sg.edu.ntu.scse.mdp13.map.GridMap.EMPTY_CELL_CODE;
-import static sg.edu.ntu.scse.mdp13.map.GridMap.END_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.GridMap.TARGET_CELL_CODE;
 import static sg.edu.ntu.scse.mdp13.map.GridMap.EXPLORE_CELL_CODE;
 import static sg.edu.ntu.scse.mdp13.map.GridMap.EXPLORE_HEAD_CELL_CODE;
 import static sg.edu.ntu.scse.mdp13.map.GridMap.FINAL_PATH_CELL_CODE;
-import static sg.edu.ntu.scse.mdp13.map.GridMap.START_CELL_CODE;
+import static sg.edu.ntu.scse.mdp13.map.GridMap.ROBO_CELL_CODE;
 
 public final class GridMapCanvas extends View {
     private int pathColor;
@@ -33,22 +34,24 @@ public final class GridMapCanvas extends View {
     private int finalPathColor;
     private int exploreHeadColor;
     private int exploreColor;
-    private int obstacleColor;
+    private int wheelColor;
+    private int tarNumColor;
     private Paint exploreHeadPaintColor = new Paint();
     private Paint pathPaintColor = new Paint();
     private Paint startPaintColor = new Paint();
     private Paint finalPathPaintColor = new Paint();
     private Paint endPaintColor = new Paint();
     private Paint explorePaintColor = new Paint();
-    private Paint obstaclePaintColor = new Paint();
+    private Paint wheelPaintColor = new Paint();
+    private Paint tarNumPaintColor = new Paint();
 
     private int cellSize = 0;
     private GridMap _map = new GridMap();
     private int turn = 0;
     private boolean isSolving = false;
 
-    public static final int START_BLOCK_TURN = -1;
-    public static final int END_BLOCK_TURN = 1;
+    public static final int ROBO_BLOCK_TURN = -1;
+    public static final int TARGET_BLOCK_TURN = 1;
 
     public GridMapCanvas(Context context) {
         super(context);
@@ -57,15 +60,16 @@ public final class GridMapCanvas extends View {
     public GridMapCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         TypedArray typedArray =
-                context.getTheme().obtainStyledAttributes(attrs, styleable.PathGrid, 0, 0);
+                context.getTheme().obtainStyledAttributes(attrs, styleable.GridMap, 0, 0);
         try {
-            this.pathColor = typedArray.getInteger(R.styleable.PathGrid_gridColor, 0);
-            this.startColor = typedArray.getInteger(R.styleable.PathGrid_startColor, 0);
-            this.endColor = typedArray.getInteger(R.styleable.PathGrid_endColor, 0);
-            this.exploreColor = typedArray.getInteger(R.styleable.PathGrid_exploreColor, 0);
-            this.exploreHeadColor = typedArray.getInteger(R.styleable.PathGrid_exploreHeadColor, 0);
-            this.finalPathColor = typedArray.getInteger(R.styleable.PathGrid_finalPathColor, 0);
-            this.obstacleColor = typedArray.getInteger(styleable.PathGrid_obstacleColor, 0);
+            this.pathColor = typedArray.getInteger(R.styleable.GridMap_gridColor, 0);
+            this.startColor = typedArray.getInteger(R.styleable.GridMap_roboColor, 0);
+            this.endColor = typedArray.getInteger(R.styleable.GridMap_targetColor, 0);
+            this.exploreColor = typedArray.getInteger(R.styleable.GridMap_exploreColor, 0);
+            this.exploreHeadColor = typedArray.getInteger(R.styleable.GridMap_exploreHeadColor, 0);
+            this.finalPathColor = typedArray.getInteger(R.styleable.GridMap_finalPathColor, 0);
+            this.wheelColor = typedArray.getInteger(R.styleable.GridMap_wheelColor, 0);
+            this.tarNumColor = typedArray.getInteger(styleable.GridMap_tarNumColor, 0);
         } finally {
             typedArray.recycle();
         }
@@ -110,8 +114,7 @@ public final class GridMapCanvas extends View {
 
         this.drawCar(canvas);
 
-        this.setPaint(this.endPaintColor, this.endColor);
-        this.colorCell(canvas, this._map.getEndY(), this._map.getEndX(), 5.0F, this.endPaintColor);
+        this.drawTarget(canvas);
     }
 
     private void colorCell(Canvas canvas, int r, int c, float radius, Paint paintColor) {
@@ -179,7 +182,7 @@ public final class GridMapCanvas extends View {
         this.colorCell(canvas, this._map.getStartY()+1, this._map.getStartX(), 5.0F, this.startPaintColor);
         this.colorCell(canvas, this._map.getStartY()+1, this._map.getStartX()+1, 5.0F, this.startPaintColor);
 
-        this.setPaint(this.obstaclePaintColor, this.obstacleColor);
+        this.setPaint(this.wheelPaintColor, this.wheelColor);
 
 
         // Draw wheels
@@ -194,7 +197,7 @@ public final class GridMapCanvas extends View {
                 rectF, // rect
                 5F, // rx
                 5F, // ry
-                this.obstaclePaintColor // Paint
+                this.wheelPaintColor // Paint
         );
 
         RectF rectv = new RectF(
@@ -208,12 +211,45 @@ public final class GridMapCanvas extends View {
                 rectv, // rect
                 5F, // rx
                 5F, // ry
-                this.obstaclePaintColor // Paint
+                this.wheelPaintColor // Paint
         );
 
         this.invalidate();
     }
 
+    private void drawTarget(Canvas canvas) {
+        int x = this._map.getEndX();
+        int y = this._map.getEndY();
+        int halfWidth = this.cellSize / 2;
+        this.setPaint(this.endPaintColor, this.endColor);
+        this.colorCell(canvas, y, x, 5.0F, this.endPaintColor);
+
+        this.setPaint(this.tarNumPaintColor, this.tarNumColor);
+
+        canvas.drawText(Integer.toString(1),
+                this.cellSize * (x-1) + this.cellSize * 0.4f,
+                this.cellSize * y - this.cellSize*0.4f,
+                tarNumPaintColor
+        );
+
+        this.setPaint(this.startPaintColor, this.startColor);
+
+        RectF dirFace = new RectF(
+                (float)((this._map.getEndX() - 1) * this.cellSize), //left
+                (float)((this._map.getEndY() - 0.9) * this.cellSize), //top - bound
+                (float)(this._map.getEndX() * this.cellSize), //right - width
+                (float)((this._map.getEndY() - 1) * this.cellSize) //bottom - height
+        );
+
+        canvas.drawRoundRect(
+                dirFace, // rect
+                5F, // rx
+                5F, // ry
+                this.startPaintColor // Paint
+        );
+
+    }
+    
     @SuppressLint({"ClickableViewAccessibility"})
     public boolean onTouchEvent(MotionEvent event) {
         float eventX = event.getX();
@@ -227,8 +263,8 @@ public final class GridMapCanvas extends View {
                     x = (int) (ceil(eventX / cellSize));
 
                     this.turn = (x == this._map.getEndX() && y == this._map.getEndY())
-                                    ? END_BLOCK_TURN
-                                    : START_BLOCK_TURN;
+                                    ? TARGET_BLOCK_TURN
+                                    : ROBO_BLOCK_TURN;
                     break;
                 // MOVE CELL 1 by 1
                 case MotionEvent.ACTION_MOVE:
@@ -245,12 +281,12 @@ public final class GridMapCanvas extends View {
     }
 
     private void dragCell(int x, int y, int turn, int firstTouch) throws ArrayIndexOutOfBoundsException {
-        // MOVE BLUE START/ROBOT BLOCK
+        // MOVE BLUE ROBO/ROBOT BLOCK
         boolean isInGrid = x >= 1 && y >= 1 && x+1 <= 20 && y+1 <= 20;
-        if (turn == START_BLOCK_TURN) {
+        if (turn == ROBO_BLOCK_TURN) {
             if (isInGrid && (this._map.getBoard()[x][y] == EMPTY_CELL_CODE)
-                && (this._map.getBoard()[x][y] != END_CELL_CODE) && (this._map.getBoard()[x+1][y+1] != END_CELL_CODE)
-                && (this._map.getBoard()[x][y+1] != END_CELL_CODE) && (this._map.getBoard()[x+1][y] != END_CELL_CODE)
+                && (this._map.getBoard()[x][y] != TARGET_CELL_CODE) && (this._map.getBoard()[x+1][y+1] != TARGET_CELL_CODE)
+                && (this._map.getBoard()[x][y+1] != TARGET_CELL_CODE) && (this._map.getBoard()[x+1][y] != TARGET_CELL_CODE)
             ) {
 
                 this._map.getBoard()[this._map.getStartX()][this._map.getStartY()] = EMPTY_CELL_CODE;
@@ -261,20 +297,20 @@ public final class GridMapCanvas extends View {
                 this._map.setStartX(x);
                 this._map.setStartY(y);
 
-                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()] = START_CELL_CODE;
-                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()+1] = START_CELL_CODE;
-                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()] = START_CELL_CODE;
-                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()+1] = START_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()] = ROBO_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()+1] = ROBO_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()] = ROBO_CELL_CODE;
+                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()+1] = ROBO_CELL_CODE;
             }
-        // MOVE RED END/TARGET BLOCK
-        } else if (turn == END_BLOCK_TURN) {
+        // MOVE RED TARGET/TARGET BLOCK
+        } else if (turn == TARGET_BLOCK_TURN) {
             if (isInGrid && (this._map.getBoard()[x][y] == EMPTY_CELL_CODE)
-                && (this._map.getBoard()[x][y] != START_CELL_CODE)
+                && (this._map.getBoard()[x][y] != ROBO_CELL_CODE)
             ) {
                 this._map.getBoard()[this._map.getEndX()][this._map.getEndY()] = EMPTY_CELL_CODE;
                 this._map.setEndX(x);
                 this._map.setEndY(y);
-                this._map.getBoard()[this._map.getEndX()][this._map.getEndY()] = END_CELL_CODE;
+                this._map.getBoard()[this._map.getEndX()][this._map.getEndY()] = TARGET_CELL_CODE;
             }
         }
     }

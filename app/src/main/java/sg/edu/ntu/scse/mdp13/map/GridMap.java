@@ -1,10 +1,10 @@
 package sg.edu.ntu.scse.mdp13.map;
 
 public class GridMap {
-    int startX = 1;
-    int startY = 19;
-    int endX = 10;
-    int endY = 10;
+    int roboX = 1;
+    int roboY = 19;
+    int targetX = 10;
+    int targetY = 10;
 
     private int rows = 21;
     private int cols = 21;
@@ -12,8 +12,8 @@ public class GridMap {
     int[][] board = new int[rows][cols];
 
     public static final int EMPTY_CELL_CODE = 0;
-    public static final int START_CELL_CODE = 1;
-    public static final int END_CELL_CODE = 3;
+    public static final int ROBO_CELL_CODE = 1;
+    public static final int TARGET_CELL_CODE = 3;
     public static final int EXPLORE_CELL_CODE = 4;
     public static final int EXPLORE_HEAD_CELL_CODE = 5;
     public static final int FINAL_PATH_CELL_CODE = 6;
@@ -21,8 +21,8 @@ public class GridMap {
     public GridMap() {
         super();
 
-        board[startX][startY] = START_CELL_CODE; //for Start
-        board[10][10] = END_CELL_CODE; //for End
+        board[roboX][roboY] = ROBO_CELL_CODE; //for Start
+        board[10][10] = TARGET_CELL_CODE; //for End
     }
 
     public final void resetGrid() {
@@ -30,45 +30,45 @@ public class GridMap {
             for(int j = 1; j <= 19; ++j)
                 this.board[i][j] = 0;
 
-        this.startX = 1;
-        this.startY = 19;
-        this.endX = 10;
-        this.endY = 10;
-        this.board[startX][startY] = START_CELL_CODE;
-        this.board[10][10] = END_CELL_CODE;
+        this.roboX = 1;
+        this.roboY = 19;
+        this.targetX = 10;
+        this.targetY = 10;
+        this.board[roboX][roboY] = ROBO_CELL_CODE;
+        this.board[10][10] = TARGET_CELL_CODE;
     }
 
 
     public int getStartX() {
-        return startX;
+        return roboX;
     }
 
-    public void setStartX(int startX) {
-        this.startX = startX;
+    public void setStartX(int roboX) {
+        this.roboX = roboX;
     }
 
     public int getStartY() {
-        return startY;
+        return roboY;
     }
 
-    public void setStartY(int startY) {
-        this.startY = startY;
+    public void setStartY(int roboY) {
+        this.roboY = roboY;
     }
 
     public int getEndX() {
-        return endX;
+        return targetX;
     }
 
-    public void setEndX(int endX) {
-        this.endX = endX;
+    public void setEndX(int targetX) {
+        this.targetX = targetX;
     }
 
     public int getEndY() {
-        return endY;
+        return targetY;
     }
 
-    public void setEndY(int endY) {
-        this.endY = endY;
+    public void setEndY(int targetY) {
+        this.targetY = targetY;
     }
 
     public int[][] getBoard() {
