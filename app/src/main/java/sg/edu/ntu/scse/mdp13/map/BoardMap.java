@@ -1,12 +1,13 @@
 package sg.edu.ntu.scse.mdp13.map;
 
+import static sg.edu.ntu.scse.mdp13.map.Target.TARGET_FACE_NORTH;
+
+import java.util.Arrays;
+
 public class BoardMap {
     int roboX = 1;
     int roboY = 19;
-    int targetX = 10;
-    int targetY = 10;
-    int targetN = 1;
-    int targetF= 0;
+    Target[] targets = new Target[10];
 
     private int rows = 21;
     private int cols = 21;
@@ -20,16 +21,21 @@ public class BoardMap {
     public static final int EXPLORE_HEAD_CELL_CODE = 5;
     public static final int FINAL_PATH_CELL_CODE = 6;
 
-    public static final int TARGET_FACE_NORTH = 0;
-    public static final int TARGET_FACE_EAST = 1;
-    public static final int TARGET_FACE_SOUTH = 2;
-    public static final int TARGET_FACE_WEST = 3;
-
     public BoardMap() {
         super();
+        board[roboX][roboY] = CAR_CELL_CODE;
 
-        board[roboX][roboY] = CAR_CELL_CODE; //for Start
-        board[10][10] = TARGET_CELL_CODE; //for End
+        targets[0] = new Target(10, 21-10); // 10, 10
+        targets[1] = new Target(15, 21-15); // 15, 15
+        targets[2] = new Target(15, 21-5); // 15, 5
+        targets[3] = new Target(20, 21-20); // 20, 20
+        targets[4] = new Target(20, 21-1); // 20, 1
+
+        int n = 0;
+        while (getTargets()[n] != null) {
+            board[targets[n].getX()][targets[n].getY()] = TARGET_CELL_CODE;
+            n++;
+        }
     }
 
     public final void resetGrid() {
@@ -39,12 +45,20 @@ public class BoardMap {
 
         this.roboX = 1;
         this.roboY = 19;
-        this.targetX = 10;
-        this.targetY = 10;
-        this.targetN = 1;
-        this.targetF= 0;
+        Arrays.fill(targets, null);
         this.board[roboX][roboY] = CAR_CELL_CODE;
-        this.board[10][10] = TARGET_CELL_CODE;
+
+        targets[0] = new Target(10, 21-10); // 10, 10
+        targets[1] = new Target(15, 21-15); // 15, 15
+        targets[2] = new Target(15, 21-5); // 15, 5
+        targets[3] = new Target(20, 21-20); // 20, 20
+        targets[4] = new Target(20, 21-1); // 20, 1
+
+        int n = 0;
+        while (getTargets()[n] != null) {
+            board[targets[n].getX()][targets[n].getY()] = TARGET_CELL_CODE;
+            n++;
+        }
     }
 
 
@@ -64,41 +78,23 @@ public class BoardMap {
         this.roboY = roboY;
     }
 
-    public int getEndX() {
-        return targetX;
+    public Target[] getTargets() {
+        return targets;
     }
 
-    public void setEndX(int targetX) {
-        this.targetX = targetX;
+    public Target findTarget(int x, int y) {
+        int n = 0;
+        while (getTargets()[n] != null) {
+            if (targets[n].getX() == x && targets[n].getY() == y)
+                return targets[n];
+
+            n++;
+        }
+        return null;
     }
 
-    public int getEndY() {
-        return targetY;
-    }
-
-    public void setEndY(int targetY) {
-        this.targetY = targetY;
-    }
-
-    public int getTargetN() {
-        return targetN;
-    }
-
-    public void setTargetN(int targetN) {
-        this.targetN = targetN;
-    }
-
-    public int getTargetF() {
-        return targetF;
-    }
-
-    public void toggleTargetFace(int rotate) {
-        if (rotate > 0)
-            // Positive rotate for clockwise
-            this.targetF = this.targetF == TARGET_FACE_WEST ? TARGET_FACE_NORTH : this.targetF + rotate;
-        else
-            // Negative rotate for anti-clockwise
-            this.targetF = this.targetF == TARGET_FACE_NORTH ? TARGET_FACE_WEST : this.targetF + rotate;
+    public void setTargets(Target[] targets) {
+        this.targets = targets;
     }
 
     public int[][] getBoard() {
