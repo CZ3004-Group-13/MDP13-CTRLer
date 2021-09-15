@@ -3,17 +3,18 @@ package sg.edu.ntu.scse.mdp13.map;
 import android.util.Log;
 
 public class Target {
-    private int x, y, n = 0, f = 0;
+    private int x, y, n, f;
 
     public static final int TARGET_FACE_NORTH = 0;
     public static final int TARGET_FACE_EAST = 1;
     public static final int TARGET_FACE_SOUTH = 2;
     public static final int TARGET_FACE_WEST = 3;
 
-    public Target(int x, int y) {
+    public Target(int x, int y, int n) {
         this.x = x;
         this.y = y;
-        this.n++;
+        this.n = n;
+        this.f = 0;
     }
 
     public int getX() {
@@ -49,5 +50,12 @@ public class Target {
             this.f = this.f == TARGET_FACE_WEST ? TARGET_FACE_NORTH : this.f + 1;
         else
             this.f = this.f == TARGET_FACE_NORTH ? TARGET_FACE_WEST : this.f - 1;
+    }
+
+    @Override
+    public String toString() {
+        return "Target{" +
+                "n=" + n +
+                '}';
     }
 }

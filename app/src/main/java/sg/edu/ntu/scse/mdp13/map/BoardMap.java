@@ -2,12 +2,16 @@ package sg.edu.ntu.scse.mdp13.map;
 
 import static sg.edu.ntu.scse.mdp13.map.Target.TARGET_FACE_NORTH;
 
+import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BoardMap {
     int roboX = 1;
     int roboY = 19;
-    Target[] targets = new Target[10];
+    ArrayList<Target> targets = new ArrayList<Target>();
+    Target lastTouched;
 
     private int rows = 21;
     private int cols = 21;
@@ -25,15 +29,15 @@ public class BoardMap {
         super();
         board[roboX][roboY] = CAR_CELL_CODE;
 
-        targets[0] = new Target(10, 21-10); // 10, 10
-        targets[1] = new Target(15, 21-15); // 15, 15
-        targets[2] = new Target(15, 21-5); // 15, 5
-        targets[3] = new Target(20, 21-20); // 20, 20
-        targets[4] = new Target(20, 21-1); // 20, 1
+        targets.add(new Target(10, 21-10, targets.size())); // 10, 10
+        targets.add(new Target(15, 21-15, targets.size())); // 15, 15
+        targets.add(new Target(15, 21-5, targets.size())); // 15, 5
+        targets.add(new Target(20, 21-20, targets.size())); // 20, 20
+        targets.add(new Target(20, 21-1, targets.size())); // 20, 1
 
         int n = 0;
-        while (getTargets()[n] != null) {
-            board[targets[n].getX()][targets[n].getY()] = TARGET_CELL_CODE;
+        while (n < targets.size()) {
+            board[targets.get(n).getX()][targets.get(n).getY()] = TARGET_CELL_CODE;
             n++;
         }
     }
@@ -45,18 +49,18 @@ public class BoardMap {
 
         this.roboX = 1;
         this.roboY = 19;
-        Arrays.fill(targets, null);
+        targets.clear();
         this.board[roboX][roboY] = CAR_CELL_CODE;
 
-        targets[0] = new Target(10, 21-10); // 10, 10
-        targets[1] = new Target(15, 21-15); // 15, 15
-        targets[2] = new Target(15, 21-5); // 15, 5
-        targets[3] = new Target(20, 21-20); // 20, 20
-        targets[4] = new Target(20, 21-1); // 20, 1
+        targets.add(new Target(10, 21-10, targets.size())); // 10, 10
+        targets.add(new Target(15, 21-15, targets.size())); // 15, 15
+        targets.add(new Target(15, 21-5, targets.size())); // 15, 5
+        targets.add(new Target(20, 21-20, targets.size())); // 20, 20
+        targets.add(new Target(20, 21-1, targets.size())); // 20, 1
 
         int n = 0;
-        while (getTargets()[n] != null) {
-            board[targets[n].getX()][targets[n].getY()] = TARGET_CELL_CODE;
+        while (n < targets.size()) {
+            board[targets.get(n).getX()][targets.get(n).getY()] = TARGET_CELL_CODE;
             n++;
         }
     }
@@ -78,23 +82,38 @@ public class BoardMap {
         this.roboY = roboY;
     }
 
-    public Target[] getTargets() {
+    public ArrayList<Target> getTargets() {
         return targets;
+    }
+
+    public void dequeueTarget(Target t) {
+        int delTargetIdx = t.getN();
+
+        targets.remove(t.getN());
+
+        while (delTargetIdx < targets.size()) {
+            targets.get(delTargetIdx).setN(delTargetIdx);
+            delTargetIdx++;
+        }
+    }
+
+    public Target getLastTouchedTarget() {
+        return lastTouched;
+    }
+
+    public void setLastTouchedTarget(Target lastT) {
+        this.lastTouched = lastT;
     }
 
     public Target findTarget(int x, int y) {
         int n = 0;
-        while (getTargets()[n] != null) {
-            if (targets[n].getX() == x && targets[n].getY() == y)
-                return targets[n];
+        while (n < targets.size()) {
+            if (targets.get(n).getX() == x && targets.get(n).getY() == y)
+                return targets.get(n);
 
             n++;
         }
         return null;
-    }
-
-    public void setTargets(Target[] targets) {
-        this.targets = targets;
     }
 
     public int[][] getBoard() {

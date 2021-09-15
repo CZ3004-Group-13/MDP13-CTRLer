@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -118,7 +119,7 @@ public final class GridMapCanvas extends View {
         this.drawCar(canvas);
 
         int n = 0;
-        while (_map.getTargets()[n] != null) {
+        while (n < _map.getTargets().size()) {
             this.drawTarget(canvas, n);
             n++;
         }
@@ -226,8 +227,8 @@ public final class GridMapCanvas extends View {
     }
 
     private void drawTarget(Canvas canvas, int tarNum) {
-        int x = this._map.getTargets()[tarNum].getX();
-        int y = this._map.getTargets()[tarNum].getY();
+        int x = this._map.getTargets().get(tarNum).getX();
+        int y = this._map.getTargets().get(tarNum).getY();
 
         this.setPaint(this.endPaintColor, this.endColor);
         this.colorCell(canvas, y, x, 5.0F, this.endPaintColor);
@@ -243,7 +244,7 @@ public final class GridMapCanvas extends View {
         this.setPaint(this.startPaintColor, this.startColor);
 
         float leftBound = 0, topBound = 0, rightBound = 0, bottomBound = 0;
-        switch(_map.getTargets()[tarNum].getF()) {
+        switch(_map.getTargets().get(tarNum).getF()) {
             case TARGET_FACE_NORTH:
                 leftBound = -1;
                 topBound = -0.9f;
@@ -271,10 +272,10 @@ public final class GridMapCanvas extends View {
         }
 
         RectF fRect = new RectF(
-                (float)((_map.getTargets()[tarNum].getX() + leftBound) * this.cellSize), //left
-                (float)((_map.getTargets()[tarNum].getY() + topBound) * this.cellSize), //top
-                (float)((_map.getTargets()[tarNum].getX() + rightBound) * this.cellSize), //right
-                (float)((_map.getTargets()[tarNum].getY() + bottomBound) * this.cellSize) //bottom
+                (float)((_map.getTargets().get(tarNum).getX() + leftBound) * this.cellSize), //left
+                (float)((_map.getTargets().get(tarNum).getY() + topBound) * this.cellSize), //top
+                (float)((_map.getTargets().get(tarNum).getX() + rightBound) * this.cellSize), //right
+                (float)((_map.getTargets().get(tarNum).getY() + bottomBound) * this.cellSize) //bottom
         );
         canvas.drawRoundRect(
                 fRect, // rect
@@ -305,6 +306,7 @@ public final class GridMapCanvas extends View {
 
                     if (this.turn == TARGET_BLOCK_TURN)
                         t.cycleFaceClockwise(true);
+                        _map.setLastTouchedTarget(t);
 
                     break;
                 // MOVE CELL 1 by 1
@@ -343,20 +345,26 @@ public final class GridMapCanvas extends View {
                 this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()] = CAR_CELL_CODE;
                 this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()+1] = CAR_CELL_CODE;
             }
-        // MOVE RED TARGET BLOCK
+
         } else if (turn == TARGET_BLOCK_TURN) {
             boolean isTargetInGrid =  x >= 1 && y >= 1 && x <= 20 && y <= 20;
+
+            // MOVE RED TARGET BLOCK TO EMPTY CELL BUT AVOID CAR CELL
             if (isTargetInGrid && (this._map.getBoard()[x][y] == EMPTY_CELL_CODE)
                 && (this._map.getBoard()[x][y] != CAR_CELL_CODE)
             ) {
-                this._map.getBoard()[_map.getTargets()[0].getX()][_map.getTargets()[0].getY()] = EMPTY_CELL_CODE;
-                this._map.getTargets()[0].setX(x);
-                this._map.getTargets()[0].setY(y);
-                this._map.getBoard()[_map.getTargets()[0].getX()][_map.getTargets()[0].getY()] = TARGET_CELL_CODE;
+                Target t = _map.getLastTouchedTarget();
+                this._map.getBoard()[t.getX()][t.getY()] = EMPTY_CELL_CODE;
+                t.setX(x);
+                t.setY(y);
+                this._map.getBoard()[t.getX()][t.getY()] = TARGET_CELL_CODE;
+
+            } else if (!isTargetInGrid) {
+                Target t = this._map.getLastTouchedTarget();
+                if(_map.getTargets().contains(t))
+                    _map.dequeueTarget(t);
+
             }
-
-            // TODO: remove target cell
-
         }
     }
 
