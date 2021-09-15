@@ -54,6 +54,7 @@ public final class GridMapCanvas extends View {
     private int turn = 0;
     private boolean isSolving = false;
 
+    public static final int NEW_TARGET_TURN = 0;
     public static final int CAR_BLOCK_TURN = -1;
     public static final int TARGET_BLOCK_TURN = 1;
 
@@ -300,13 +301,22 @@ public final class GridMapCanvas extends View {
                     x = (int) (ceil(eventX / cellSize));
                     t = _map.findTarget(x, y);
 
-                    // TODO: add back EMPTY_BLOCK_TURN
-                    // TODO: re-prioritise EMPTY turn first for hold and tap
-                    this.turn = (t != null) ? TARGET_BLOCK_TURN : CAR_BLOCK_TURN;
+                    this.turn = (t != null)
+                            ? TARGET_BLOCK_TURN
+                            : ((x == this._map.getStartX() && y == this._map.getStartY()) ||
+                            (x == this._map.getStartX() && y == this._map.getStartY()+1) ||
+                            (x == this._map.getStartX()+1 && y == this._map.getStartY()) ||
+                            (x == this._map.getStartX()+1 && y == this._map.getStartY()+1))
+                            ? CAR_BLOCK_TURN
+                            : NEW_TARGET_TURN;
 
                     if (this.turn == TARGET_BLOCK_TURN)
                         t.cycleFaceClockwise(true);
                         _map.setLastTouchedTarget(t);
+
+                    if (this.turn == NEW_TARGET_TURN) {
+                        this.dragCell(x, y, this.turn, 1);
+                    }
 
                     break;
                 // MOVE CELL 1 by 1
@@ -347,11 +357,11 @@ public final class GridMapCanvas extends View {
             }
 
         } else if (turn == TARGET_BLOCK_TURN) {
-            boolean isTargetInGrid =  x >= 1 && y >= 1 && x <= 20 && y <= 20;
+            boolean isTargetInGrid = x >= 1 && y >= 1 && x <= 20 && y <= 20;
 
             // MOVE RED TARGET BLOCK TO EMPTY CELL BUT AVOID CAR CELL
             if (isTargetInGrid && (this._map.getBoard()[x][y] == EMPTY_CELL_CODE)
-                && (this._map.getBoard()[x][y] != CAR_CELL_CODE)
+                    && (this._map.getBoard()[x][y] != CAR_CELL_CODE)
             ) {
                 Target t = _map.getLastTouchedTarget();
                 this._map.getBoard()[t.getX()][t.getY()] = EMPTY_CELL_CODE;
@@ -361,9 +371,15 @@ public final class GridMapCanvas extends View {
 
             } else if (!isTargetInGrid) {
                 Target t = this._map.getLastTouchedTarget();
-                if(_map.getTargets().contains(t))
+                if (_map.getTargets().contains(t))
                     _map.dequeueTarget(t);
+            }
+        } else if (turn == NEW_TARGET_TURN) {
+            if (this._map.getBoard()[y][x] == EMPTY_CELL_CODE) {
 
+                Target t = new Target(x, y, _map.getTargets().size());
+                this._map.getBoard()[t.getX()][t.getY()] = TARGET_CELL_CODE;
+                _map.getTargets().add(t);
             }
         }
     }
