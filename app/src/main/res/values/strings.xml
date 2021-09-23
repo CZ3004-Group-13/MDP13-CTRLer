@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">MDP13-CTRLer</string>
     <string name="reset">RESET</string>
-    <string name="solve">SOLVE</string>
+    <string name="bte">BLUETOOTH</string>
 </resources>

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import sg.edu.ntu.scse.mdp13.map.GridMapCanvas;
 import sg.edu.ntu.scse.mdp13.map.BoardMap;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         finder = gridMapCanvas.getFinder();
 
         Button btnReset = (Button)this.findViewById(R.id.btn_reset);
+        Button btBte = (Button)this.findViewById(R.id.btn_bte);
 
         btnReset.setOnClickListener(new OnClickListener() {
             @Override
@@ -34,6 +36,13 @@ public class MainActivity extends AppCompatActivity {
                 gridMapCanvas.setSolving(false);
                 finder.resetGrid();
                 gridMapCanvas.invalidate();
+            }
+        });
+
+        btnReset.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showBottomSheetDialog();
             }
         });
     }
@@ -48,5 +57,10 @@ public class MainActivity extends AppCompatActivity {
             toast.setGravity(Gravity.BOTTOM, 0, -200);
             toast.show();
         }
+    }
+
+    private void showBottomSheetDialog() {
+        final DialogFragment dialogFragment = new DialogFragment();
+        dialogFragment.show(getSupportFragmentManager(), dialogFragment.getTag());
     }
 }
