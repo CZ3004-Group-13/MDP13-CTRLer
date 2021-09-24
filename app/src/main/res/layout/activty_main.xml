@@ -1,97 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
+    android:fitsSystemWindows="false"
     tools:context=".MainActivity">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar_top"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/black"
-        android:minHeight="?android:attr/actionBarSize"
-        custom:layout_constraintEnd_toEndOf="parent"
-        custom:layout_constraintStart_toStartOf="parent"
-        custom:layout_constraintTop_toTopOf="parent">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        tools:context=".MainActivity">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:minHeight="?android:attr/actionBarSize"
+            custom:layout_constraintEnd_toEndOf="parent"
+            custom:layout_constraintStart_toStartOf="parent"
+            custom:layout_constraintTop_toTopOf="parent">
 
 
-        <TextView
-            android:id="@+id/toolbar_title"
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/open_sans_light"
+                android:text="@string/app_name"
+                android:textSize="24sp" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <sg.edu.ntu.scse.mdp13.map.GridMapCanvas
+            android:id="@+id/pathGrid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            app:finalPathColor="#CBC6FF00"
+            custom:wheelColor="#636363"
+            app:exploreHeadColor="#0494DA"
+            custom:roboColor="#CB04ADFF"
+            custom:gridColor="#DFBF9C"
+            app:exploreColor="#CBFFBE85"
+            custom:targetColor="#CBB6350E"
+            custom:tarNumColor="#FFFFFF"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_top"
+            custom:layout_constraintBottom_toBottomOf="parent"
+            custom:layout_constraintEnd_toEndOf="parent"
+            custom:layout_constraintStart_toStartOf="parent"
+            custom:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_reset"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans_light"
-            android:text="@string/app_name"
-            android:textSize="24sp" />
+            android:text="@string/reset"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:textColor="@drawable/button_text_color"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pathGrid"
+            app:rippleColor="#FFECB3"
+            app:strokeColor="#6E6E6E" />
 
-    </com.google.android.material.appbar.MaterialToolbar>
+    <!--    <Button-->
+    <!--        android:id="@+id/btn_bte"-->
+    <!--        style="?attr/materialButtonOutlinedStyle"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:fontFamily="@font/open_sans_light"-->
+    <!--        android:text="@string/bte"-->
+    <!--        android:textAppearance="@style/TextAppearance.MaterialComponents.Button"-->
+    <!--        android:textColor="@drawable/button_text_color"-->
+    <!--        android:textStyle="bold"-->
+    <!--        app:layout_constraintBaseline_toBaselineOf="@+id/btn_reset"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/guideline3"-->
 
-    <sg.edu.ntu.scse.mdp13.map.GridMapCanvas
-        android:id="@+id/pathGrid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:finalPathColor="#CBC6FF00"
-        custom:wheelColor="#636363"
-        app:exploreHeadColor="#0494DA"
-        custom:roboColor="#CB04ADFF"
-        custom:gridColor="#DFBF9C"
-        app:exploreColor="#CBFFBE85"
-        custom:targetColor="#CBB6350E"
-        custom:tarNumColor="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_top"
-        custom:layout_constraintBottom_toBottomOf="parent"
-        custom:layout_constraintEnd_toEndOf="parent"
-        custom:layout_constraintStart_toStartOf="parent"
-        custom:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btn_reset"
-        style="?attr/materialButtonOutlinedStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/open_sans_light"
-        android:text="@string/reset"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-        android:textColor="@drawable/button_text_color"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pathGrid"
-        app:rippleColor="#FFECB3"
-        app:strokeColor="#6E6E6E" />
-
-    <Button
-        android:id="@+id/btn_bte"
-        style="?attr/materialButtonOutlinedStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/open_sans_light"
-        android:text="@string/bte"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-        android:textColor="@drawable/button_text_color"
-        android:textStyle="bold"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btn_reset"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-
-        app:rippleColor="#FFECB3"
-        app:strokeColor="#6E6E6E"
-        custom:layout_constraintBottom_toBottomOf="parent" />
+    <!--        app:rippleColor="#FFECB3"-->
+    <!--        app:strokeColor="#6E6E6E"-->
+    <!--        custom:layout_constraintBottom_toBottomOf="parent" />-->
 
 
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Bottom Sheet -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorBackgroundFloating"
+        android:elevation="16dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        app:behavior_peekHeight="?attr/actionBarSize"
+        app:layout_behavior="@string/view_pager_bottom_sheet_behavior">
 
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/bottom_sheet_appbar"
+            style="@style/BottomSheetAppBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/bottom_sheet_toolbar"
+                style="@style/BottomSheetToolbarStyle"
+                android:layout_width="match_parent" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/topTabs"
+                style="@style/BottomSheetTabLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

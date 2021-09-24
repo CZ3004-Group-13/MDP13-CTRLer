@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">MDP13-CTRLer</string>
     <string name="reset">RESET</string>
-    <string name="bte">BLUETOOTH</string>
+    <string name="bottom_sheet_title">BLUETOOTH</string>
+
+    <string name="tab_connection">Connection</string>
+
+    <string name="bluetooth_available_devices">Available devices</string>
+    <string name="bluetooth_scan_btn">Scan</string>
+    <string name="bluetooth_connect_btn">Connect</string>
+    <string name="last_paried_device">Last paired device</string>
 </resources>
