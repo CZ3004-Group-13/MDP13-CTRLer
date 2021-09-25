@@ -15,9 +15,10 @@
         android:id="@+id/last_connected_device"
         android:visibility="gone">
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/black_bg">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -27,12 +28,14 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@color/black_hl">
 
                     <TextView
-                        android:text="@string/last_paried_device"
+                        android:text="@string/last_paired_device"
                         android:layout_width="0dp"
                         android:layout_height="24dp"
+                        android:textColor="@color/blue"
                         tools:text="Last paired device"
                         app:layout_constraintStart_toStartOf="parent"
                         android:layout_marginStart="8dp"
@@ -46,12 +49,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="49dp"
                         android:id="@+id/bluetooth_reconnect_btn"
+                        android:onClick="bluetoothOnClickMethods"
+                        android:backgroundTint="@color/black_bg"
+                        android:textColor="@color/red"
+                        tools:layout_editor_absoluteY="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        android:layout_marginEnd="8dp"
-                        android:visibility="gone"
-                        tools:layout_editor_absoluteY="8dp" />
+                        android:layout_marginEnd="8dp" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -60,24 +65,23 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/constraintLayout"
+                android:background="@color/black_bg"
                 android:layout_marginBottom="8dp"
-                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/constraintLayout"
-                app:layout_constraintTop_toBottomOf="@+id/connected_device_header"
-                android:layout_marginTop="8dp">
+                app:layout_constraintTop_toBottomOf="@+id/connected_device_header">
 
                 <ImageView
                     android:src="@mipmap/baseline_computer_white_18dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/imageView"
-                    app:layout_constraintTop_toBottomOf="parent"
-                    app:layout_constraintBottom_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginTop="8dp" />
 
                 <TextView
@@ -85,6 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/connected_device"
+                    android:textColor="@color/blue"
                     app:layout_constraintStart_toEndOf="@+id/imageView"
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
@@ -97,6 +102,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/device_status"
+                    android:textColor="@color/gold"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
@@ -105,7 +111,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -122,9 +128,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/scan_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_height="wrap_content">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -142,8 +146,6 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         android:layout_marginBottom="1dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp" />
 
                     <Button

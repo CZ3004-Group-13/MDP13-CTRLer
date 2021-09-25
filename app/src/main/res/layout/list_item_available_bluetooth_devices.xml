@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:paddingLeft="12dp"
     android:paddingRight="2dp"
-    android:id="@+id/device_info">
+    android:id="@+id/device_info"
+    android:background="@color/black_hl">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -14,7 +15,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/black_hl">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -31,6 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:id="@+id/bluetooth_device_text"
+                android:textColor="@color/blue"
                 app:layout_constraintStart_toEndOf="@+id/bluetooth_icon"
                 android:layout_marginStart="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -43,6 +46,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/bluetooth_connect_btn"
+                android:backgroundTint="@color/black_bg"
+                android:textColor="@color/yellow"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="2dp"

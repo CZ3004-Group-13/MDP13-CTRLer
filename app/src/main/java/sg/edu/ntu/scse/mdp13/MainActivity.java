@@ -2,22 +2,18 @@ package sg.edu.ntu.scse.mdp13;
 
 import android.os.Bundle;
 
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import sg.edu.ntu.scse.mdp13.bluetooth.BluetoothFragment;
 import sg.edu.ntu.scse.mdp13.bluetooth.PagerAdapter;
 import sg.edu.ntu.scse.mdp13.bluetooth.PagerAdapter.TabItem;
-
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -55,33 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 gridMapCanvas.invalidate();
             }
         });
-
-
-
-//        btBte.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                showBottomSheetDialog();
-//            }
-//        });
     }
-
-    private void makeToast(boolean found) {
-        if (found) {
-            Toast toast = Toast.makeText(this, "Path Found.", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.BOTTOM, 0, -200);
-            toast.show();
-        } else {
-            Toast toast = Toast.makeText(this, "No Path Found.", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.BOTTOM, 0, -200);
-            toast.show();
-        }
-    }
-
-//    private void showBottomSheetDialog() {
-//        final DialogFragment dialogFragment = new DialogFragment();
-//        dialogFragment.show(getSupportFragmentManager(), dialogFragment.getTag());
-//    }
 
     private void setupBottomSheet() {
         bottomSheetToolbar.setTitle(R.string.bottom_sheet_title);

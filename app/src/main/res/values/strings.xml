@@ -8,5 +8,5 @@
     <string name="bluetooth_available_devices">Available devices</string>
     <string name="bluetooth_scan_btn">Scan</string>
     <string name="bluetooth_connect_btn">Connect</string>
-    <string name="last_paried_device">Last paired device</string>
+    <string name="last_paired_device">Last paired device</string>
 </resources>
