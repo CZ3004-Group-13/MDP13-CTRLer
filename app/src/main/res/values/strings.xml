@@ -4,6 +4,7 @@
     <string name="bottom_sheet_title">BLUETOOTH</string>
 
     <string name="tab_connection">Connection</string>
+    <string name="tab_message">Message</string>
 
     <string name="bluetooth_available_devices">Available devices</string>
     <string name="bluetooth_scan_btn">Scan</string>

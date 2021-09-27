@@ -12,9 +12,8 @@ import sg.edu.ntu.scse.mdp13.R;
 public class PagerAdapter extends FragmentPagerAdapter {
 
     public enum TabItem {
-        CONNECTION(BluetoothFragment.class, R.string.tab_connection);
-        //NESTED_SCROLL(NestedScrollFragment.class, R.string.tab_nested_scroll),
-        //VIEW_PAGER(ViewPagerFragment.class, R.string.tab_view_pager);
+        CONNECTION(BluetoothFragment.class, R.string.tab_connection),
+        MESSAGE(MessageFragment.class, R.string.tab_message);
 
         private final Class<? extends Fragment> fragmentClass;
         private final int titleResId;

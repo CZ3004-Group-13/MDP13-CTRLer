@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupBottomSheet() {
         bottomSheetToolbar.setTitle(R.string.bottom_sheet_title);
-        final PagerAdapter sectionsPagerAdapter = new PagerAdapter(getSupportFragmentManager(), this, TabItem.CONNECTION);
+        final PagerAdapter sectionsPagerAdapter = new PagerAdapter(getSupportFragmentManager(), this, TabItem.CONNECTION, TabItem.MESSAGE);
         bottomSheetViewPager.setOffscreenPageLimit(1);
         bottomSheetViewPager.setAdapter(sectionsPagerAdapter);
         bottomSheetTabLayout.setupWithViewPager(bottomSheetViewPager);

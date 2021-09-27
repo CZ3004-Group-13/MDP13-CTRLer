@@ -97,9 +97,9 @@ public class BluetoothFragment extends Fragment {
                     if(isDebug){
                         //!ridMapFragment.addTextToStatusWindow(activity, readMessage);
                     }
-                    //!if (activity != null) {
-                    //!GridMapFragment.addTextToStatusWindow(activity, readMessage);
-                    //!}
+                    if (activity != null) {
+                        MessageFragment.addTextToStatusWindow(activity, readMessage);
+                    }
                     //!mapUpdateManager.decodeMessage(getContext(), readMessage);
                     break;
                 case BluetoothService.HandlerConstants.MESSAGE_WRITE:
@@ -170,16 +170,6 @@ public class BluetoothFragment extends Fragment {
     // initializations
     public BluetoothFragment() {}
 
-    public static BluetoothFragment newInstance(int position) {
-        Log.d("BLOCK", "STATIC NEW INSTANCE ");
-        BluetoothFragment f = new BluetoothFragment();
-        Bundle b = new Bundle();
-        b.putInt("position", position);
-        f.setArguments(b);
-
-        return f;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,11 +189,8 @@ public class BluetoothFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         View root_view = inflater.inflate(R.layout.fragment_bluetooth, container, false);
-
-        Log.d("BLOCK", "ON CREATE VIEW");
 
         // Setup RecyclerView
         RecyclerView mRecyclerView = root_view.findViewById(R.id.device_list);

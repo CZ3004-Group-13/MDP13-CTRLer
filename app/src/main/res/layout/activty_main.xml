@@ -13,7 +13,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
+        android:background="@color/black_hl"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         tools:context=".MainActivity">
@@ -22,7 +22,7 @@
             android:id="@+id/toolbar_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
+            android:background="@color/black_hl"
             android:minHeight="?android:attr/actionBarSize"
             custom:layout_constraintEnd_toEndOf="parent"
             custom:layout_constraintStart_toStartOf="parent"
@@ -36,6 +36,7 @@
                 android:layout_gravity="center"
                 android:fontFamily="@font/open_sans_light"
                 android:text="@string/app_name"
+                android:textColor="@color/yellow"
                 android:textSize="24sp" />
 
         </com.google.android.material.appbar.MaterialToolbar>
@@ -45,13 +46,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:finalPathColor="#CBC6FF00"
-            custom:wheelColor="#636363"
-            app:exploreHeadColor="#0494DA"
-            custom:roboColor="#CB04ADFF"
-            custom:gridColor="#DFBF9C"
-            app:exploreColor="#CBFFBE85"
-            custom:targetColor="#CBB6350E"
-            custom:tarNumColor="#FFFFFF"
+            custom:wheelColor="@color/black_hl"
+            app:exploreHeadColor="@color/blue_hl"
+            custom:roboColor="@color/blue"
+            custom:gridColor="@color/black_bg"
+            app:exploreColor="@color/yellow"
+            custom:targetColor="@color/red"
+            custom:tarNumColor="@color/white"
             android:layout_marginStart="10dp"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_top"
             app:layout_constraintStart_toEndOf="parent"
@@ -60,21 +61,19 @@
 
         <Button
             android:id="@+id/btn_reset"
-            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans_light"
             android:text="@string/reset"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-            android:textColor="@drawable/button_text_color"
             android:textStyle="bold"
+            android:backgroundTint="@color/black_bg"
+            android:textColor="@color/yellow"
             android:layout_marginTop="30dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintTop_toBottomOf="@+id/pathGrid"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
-            app:rippleColor="#FFECB3"
-            app:strokeColor="#6E6E6E" />
+            app:rippleColor="#FFECB3" />
 
 
         <androidx.constraintlayout.widget.Guideline
@@ -115,7 +114,7 @@
                 android:layout_height="wrap_content"
                 style="@style/BottomSheetTabLayoutStyle"
                 android:background="@color/black_hl"
-                app:tabTextColor="@color/blue_hl"/>
+                app:tabTextColor="@color/yellow"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 
