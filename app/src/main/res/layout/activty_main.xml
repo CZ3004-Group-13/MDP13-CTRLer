@@ -11,33 +11,52 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:custom="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mainlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black_hl"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="10dp"
         tools:context=".MainActivity">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:layout_marginEnd="-7dp"
             android:background="@color/black_hl"
             android:minHeight="?android:attr/actionBarSize"
             custom:layout_constraintEnd_toEndOf="parent"
             custom:layout_constraintStart_toStartOf="parent"
             custom:layout_constraintTop_toTopOf="parent">
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fastest"
+                android:textColor="@color/blue"
+                android:backgroundTint="@color/black_bg"
+                android:layout_gravity="start" />
 
             <TextView
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/open_sans_light"
                 android:text="@string/app_name"
+                android:textSize="21sp"
                 android:textColor="@color/yellow"
-                android:textSize="24sp" />
+                android:fontFamily="@font/open_sans_light"
+                android:paddingStart="20dp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Image"
+                android:textColor="@color/blue"
+                android:backgroundTint="@color/black_bg"
+                android:layout_gravity="right"/>
 
         </android.support.v7.widget.Toolbar>
 
@@ -59,6 +78,64 @@
             custom:layout_constraintEnd_toEndOf="parent"
             custom:layout_constraintStart_toStartOf="parent"/>
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hud_left"
+            app:srcCompat="@drawable/ic_hud_left"
+            android:tint="@color/yellow"
+            android:background="@null"
+            android:layout_marginTop="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pathGrid"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hud_right"
+            app:srcCompat="@drawable/ic_hud_right"
+            android:tint="@color/yellow"
+            android:background="@null"
+            android:layout_marginTop="30dp"
+            app:layout_constraintStart_toEndOf="@id/hud_left"
+            app:layout_constraintTop_toBottomOf="@+id/pathGrid"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hud_accelerate"
+            app:srcCompat="@drawable/ic_hud_accelerate"
+            android:tint="@color/blue_hl"
+            android:background="@null"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pathGrid"
+        />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_hud_stop"
+            android:tint="@color/red"
+            android:background="@null"
+            android:layout_marginTop="10dp"
+            app:layout_constraintRight_toLeftOf="@id/hud_accelerate"
+            app:layout_constraintTop_toBottomOf="@+id/pathGrid"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_hud_brake"
+            android:tint="@color/blue"
+            android:background="@null"
+            android:layout_marginTop="65dp"
+            app:layout_constraintRight_toLeftOf="@id/hud_accelerate"
+            app:layout_constraintTop_toBottomOf="@+id/pathGrid"
+            />
+
         <Button
             android:id="@+id/btn_reset"
             android:layout_width="wrap_content"
@@ -66,11 +143,11 @@
             android:fontFamily="@font/open_sans_light"
             android:text="@string/reset"
             android:textStyle="bold"
-            android:backgroundTint="@color/black_bg"
-            android:textColor="@color/yellow"
-            android:layout_marginTop="30dp"
+            android:backgroundTint="@color/black_hl"
+            android:textColor="@color/grey"
+            android:layout_marginBottom="?attr/actionBarSize"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
-            app:layout_constraintTop_toBottomOf="@+id/pathGrid"
+            app:layout_constraintBottom_toBottomOf="@id/mainlayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
             app:rippleColor="#FFECB3" />
