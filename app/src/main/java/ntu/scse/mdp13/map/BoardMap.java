@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BoardMap {
-    Robot robo = new Robot();
+    Robot robo;
     ArrayList<Target> targets = new ArrayList<Target>();
     Target lastTouched;
 
@@ -26,6 +26,7 @@ public class BoardMap {
 
     public BoardMap() {
         super();
+        robo = new Robot(this);
         board[robo.getX()][robo.getY()] = CAR_CELL_CODE;
 
         targets.add(new Target(10, 21-10, targets.size())); // 10, 10

@@ -1,7 +1,11 @@
 package ntu.scse.mdp13.map;
 
+import static ntu.scse.mdp13.map.BoardMap.TARGET_CELL_CODE;
+
 public class Robot {
     private int x, y, s, m, f;
+
+    private BoardMap _map;
 
     public static final int ROBOT_MOTOR_FORWARD = 1;
     public static final int ROBOT_MOTOR_STOP = 0;
@@ -16,12 +20,13 @@ public class Robot {
     public static final int ROBOT_FACE_SOUTH = 2;
     public static final int ROBOT_FACE_WEST = 3;
 
-    public Robot() {
+    public Robot(BoardMap map) {
         this.x = 1;
         this.y = 19;
         this.s = ROBOT_SERVO_CENTRE;
         this.m = ROBOT_MOTOR_STOP;
         this.f = ROBOT_FACE_NORTH;
+        this._map = map;
     }
 
     public int getX() { return x; }
@@ -40,14 +45,24 @@ public class Robot {
     public void setFacing(int f) { this.f = f; }
 
     public void motorRotate(int direction) {
-        boolean isCarInGrid = x >= 1 && x+1 <= 20;
-        if (f == ROBOT_FACE_NORTH && isCarInGrid) {
+        boolean willCarInGrid = x >= 1 && x+1 <= 20;
+
+        if (f == ROBOT_FACE_NORTH && willCarInGrid) {
             boolean forwardInGrid = y-1 >= 1;
             boolean reverseInGrid = y+1 < 20;
+            boolean forwardAvoidTarget = (this._map.getBoard()[x][y - 1] != TARGET_CELL_CODE) && (this._map.getBoard()[x + 1][y - 1] != TARGET_CELL_CODE);
+            boolean reverseAvoidTarget = false;
 
-            if ((direction == ROBOT_MOTOR_FORWARD && forwardInGrid) || (direction == ROBOT_MOTOR_REVERSE && reverseInGrid)) {
-                this.m = direction == ROBOT_MOTOR_FORWARD ? ROBOT_MOTOR_FORWARD : ROBOT_MOTOR_REVERSE;
-                this.y += direction == ROBOT_MOTOR_FORWARD ? -1 : 1;
+            if ((direction == ROBOT_MOTOR_FORWARD && forwardInGrid) || (direction == ROBOT_MOTOR_REVERSE && reverseInGrid )) {
+
+                if (direction == ROBOT_MOTOR_REVERSE)
+                    reverseAvoidTarget = (this._map.getBoard()[x][y + 2] != TARGET_CELL_CODE) && (this._map.getBoard()[x + 1][y + 2] != TARGET_CELL_CODE);
+
+
+                if ((direction == ROBOT_MOTOR_FORWARD && forwardAvoidTarget) || (direction == ROBOT_MOTOR_REVERSE && reverseAvoidTarget )) {
+                    this.m = direction == ROBOT_MOTOR_FORWARD ? ROBOT_MOTOR_FORWARD : ROBOT_MOTOR_REVERSE;
+                    this.y += direction == ROBOT_MOTOR_FORWARD ? -1 : 1;
+                }
             }
         }
     }
