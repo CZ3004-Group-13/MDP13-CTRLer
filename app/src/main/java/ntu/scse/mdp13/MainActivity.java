@@ -17,18 +17,17 @@ import android.widget.ImageButton;
 
 
 import biz.laenger.android.vpbs.BottomSheetUtils;
-import ntu.scse.mdp13.R;
 import ntu.scse.mdp13.bluetooth.BluetoothFragment;
 import ntu.scse.mdp13.bluetooth.PagerAdapter;
 import ntu.scse.mdp13.bluetooth.PagerAdapter.TabItem;
 
-import ntu.scse.mdp13.map.GridMapCanvas;
+import ntu.scse.mdp13.map.MapCanvas;
 import ntu.scse.mdp13.map.BoardMap;
 import ntu.scse.mdp13.map.Robot;
 
 public class MainActivity extends AppCompatActivity {
 
-    GridMapCanvas gridMapCanvas;
+    MapCanvas mapCanvas;
     private BoardMap finder = new BoardMap();
     Button btnReset;
     ImageButton btnForward;
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activty_main);
-        gridMapCanvas = findViewById(R.id.pathGrid);
+        mapCanvas = findViewById(R.id.pathGrid);
         btnReset = (Button) this.findViewById(R.id.btn_reset);
         btnForward = (ImageButton) this.findViewById(R.id.btn_accelerate);
         btnReverse = (ImageButton) this.findViewById(R.id.btn_reverse);
@@ -54,14 +53,14 @@ public class MainActivity extends AppCompatActivity {
 
         setupBottomSheet();
 
-        finder = gridMapCanvas.getFinder();
+        finder = mapCanvas.getFinder();
 
         btnReset.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                gridMapCanvas.setSolving(false);
+                mapCanvas.setSolving(false);
                 finder.resetGrid();
-                gridMapCanvas.invalidate();
+                mapCanvas.invalidate();
             }
         });
 
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                gridMapCanvas.getFinder().getRobo().motorRotate(direction);
+                mapCanvas.getFinder().getRobo().motorRotate(direction);
             }
         });
         btn.setOnTouchListener(new View.OnTouchListener() {
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         if (mHandler == null) return true;
-                        gridMapCanvas.getFinder().getRobo().setMotor(Robot.ROBOT_MOTOR_STOP);
+                        mapCanvas.getFinder().getRobo().setMotor(Robot.ROBOT_MOTOR_STOP);
                         mHandler.removeCallbacks(mAction);
                         mHandler = null;
                         break;
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
             Runnable mAction = new Runnable() {
                 @Override public void run() {
-                    gridMapCanvas.getFinder().getRobo().motorRotate(direction);
+                    mapCanvas.getFinder().getRobo().motorRotate(direction);
                     mHandler.postDelayed(this, DELAYms);
                 }
             };

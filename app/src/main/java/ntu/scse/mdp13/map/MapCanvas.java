@@ -34,7 +34,7 @@ import static ntu.scse.mdp13.map.Target.TARGET_FACE_EAST;
 import static ntu.scse.mdp13.map.Target.TARGET_FACE_WEST;
 import static ntu.scse.mdp13.map.Target.TARGET_FACE_SOUTH;
 
-public final class GridMapCanvas extends View {
+public final class MapCanvas extends View {
     private int pathColor;
     private int startColor;
     private int endColor;
@@ -61,11 +61,11 @@ public final class GridMapCanvas extends View {
     public static final int CAR_BLOCK_TURN = -1;
     public static final int TARGET_BLOCK_TURN = 1;
 
-    public GridMapCanvas(Context context) {
+    public MapCanvas(Context context) {
         super(context);
     }
 
-    public GridMapCanvas(Context context, @Nullable AttributeSet attrs) {
+    public MapCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         TypedArray typedArray =
                 context.getTheme().obtainStyledAttributes(attrs, styleable.GridMap, 0, 0);

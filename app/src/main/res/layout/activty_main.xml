@@ -60,7 +60,7 @@
 
         </android.support.v7.widget.Toolbar>
 
-        <ntu.scse.mdp13.map.GridMapCanvas
+        <ntu.scse.mdp13.map.MapCanvas
             android:id="@+id/pathGrid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
