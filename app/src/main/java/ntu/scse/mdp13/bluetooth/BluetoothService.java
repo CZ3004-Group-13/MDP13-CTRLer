@@ -77,7 +77,6 @@ public class BluetoothService {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
 
-            Log.d("BLUETOOTH", "RECEIVER IS RECEIVING");
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Discovery has found a device. Get the BluetoothDevice
                 // object and its info from the Intent.
@@ -122,7 +121,6 @@ public class BluetoothService {
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         context.registerReceiver(mReceiver, filter);
-        Log.d("BLUETOOTH", "RECEIVER IS REGISTERED");
     }
 
     public static BluetoothService getInstance(Context context, Handler handler) {

@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BoardMap {
-    int roboX = 1;
-    int roboY = 19;
+    Robot robo = new Robot();
     ArrayList<Target> targets = new ArrayList<Target>();
     Target lastTouched;
 
@@ -27,7 +26,7 @@ public class BoardMap {
 
     public BoardMap() {
         super();
-        board[roboX][roboY] = CAR_CELL_CODE;
+        board[robo.getX()][robo.getY()] = CAR_CELL_CODE;
 
         targets.add(new Target(10, 21-10, targets.size())); // 10, 10
         targets.add(new Target(15, 21-15, targets.size())); // 15, 15
@@ -47,10 +46,10 @@ public class BoardMap {
             for(int j = 1; j <= 19; ++j)
                 this.board[i][j] = 0;
 
-        this.roboX = 1;
-        this.roboY = 19;
+        this.getRobo().setX(1);
+        this.getRobo().setY(19);
         targets.clear();
-        this.board[roboX][roboY] = CAR_CELL_CODE;
+        this.board[getRobo().getX()][getRobo().getY()] = CAR_CELL_CODE;
 
         targets.add(new Target(10, 21-10, targets.size())); // 10, 10
         targets.add(new Target(15, 21-15, targets.size())); // 15, 15
@@ -65,22 +64,7 @@ public class BoardMap {
         }
     }
 
-
-    public int getStartX() {
-        return roboX;
-    }
-
-    public void setStartX(int roboX) {
-        this.roboX = roboX;
-    }
-
-    public int getStartY() {
-        return roboY;
-    }
-
-    public void setStartY(int roboY) {
-        this.roboY = roboY;
-    }
+    public Robot getRobo() { return robo;}
 
     public ArrayList<Target> getTargets() {
         return targets;

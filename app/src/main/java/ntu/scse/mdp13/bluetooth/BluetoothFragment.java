@@ -176,8 +176,6 @@ public class BluetoothFragment extends Fragment {
 
         mBluetoothService = BluetoothService.getInstance(getContext(), mHandler);
 
-        Log.d("BLOCK", "ON CREATE WITHOUT STATIC");
-
         // Register for bluetooth scanning broadcast
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);

@@ -64,6 +64,7 @@
             android:id="@+id/pathGrid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:longClickable="true"
             app:finalPathColor="#CBC6FF00"
             custom:wheelColor="@color/black_hl"
             app:exploreHeadColor="@color/blue_hl"
@@ -81,7 +82,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/hud_left"
+            android:id="@+id/btn_left"
             app:srcCompat="@drawable/ic_hud_left"
             android:tint="@color/yellow"
             android:background="@null"
@@ -93,20 +94,21 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/hud_right"
+            android:id="@+id/btn_right"
             app:srcCompat="@drawable/ic_hud_right"
             android:tint="@color/yellow"
             android:background="@null"
             android:layout_marginTop="30dp"
-            app:layout_constraintStart_toEndOf="@id/hud_left"
+            app:layout_constraintStart_toEndOf="@id/btn_left"
             app:layout_constraintTop_toBottomOf="@+id/pathGrid"
             />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/hud_accelerate"
+            android:id="@+id/btn_accelerate"
             app:srcCompat="@drawable/ic_hud_accelerate"
+            android:longClickable="true"
             android:tint="@color/blue_hl"
             android:background="@null"
             android:layout_marginTop="30dp"
@@ -121,18 +123,20 @@
             android:tint="@color/red"
             android:background="@null"
             android:layout_marginTop="10dp"
-            app:layout_constraintRight_toLeftOf="@id/hud_accelerate"
+            app:layout_constraintRight_toLeftOf="@id/btn_accelerate"
             app:layout_constraintTop_toBottomOf="@+id/pathGrid"
             />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/btn_reverse"
             app:srcCompat="@drawable/ic_hud_brake"
+            android:longClickable="true"
             android:tint="@color/blue"
             android:background="@null"
             android:layout_marginTop="65dp"
-            app:layout_constraintRight_toLeftOf="@id/hud_accelerate"
+            app:layout_constraintRight_toLeftOf="@id/btn_accelerate"
             app:layout_constraintTop_toBottomOf="@+id/pathGrid"
             />
 

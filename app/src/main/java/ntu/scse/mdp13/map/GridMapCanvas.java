@@ -10,9 +10,11 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Paint.Style;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -80,7 +82,6 @@ public final class GridMapCanvas extends View {
             typedArray.recycle();
         }
     }
-
 
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -188,20 +189,20 @@ public final class GridMapCanvas extends View {
     private void drawCar(Canvas canvas) {
         this.setPaint(this.startPaintColor, this.startColor);
 
-        this.colorCell(canvas, this._map.getStartY(), this._map.getStartX(), 5.0F, this.startPaintColor);
-        this.colorCell(canvas, this._map.getStartY(), this._map.getStartX()+1, 5.0F, this.startPaintColor);
-        this.colorCell(canvas, this._map.getStartY()+1, this._map.getStartX(), 5.0F, this.startPaintColor);
-        this.colorCell(canvas, this._map.getStartY()+1, this._map.getStartX()+1, 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getRobo().getY(), this._map.getRobo().getX(), 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getRobo().getY(), this._map.getRobo().getX()+1, 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getRobo().getY()+1, this._map.getRobo().getX(), 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getRobo().getY()+1, this._map.getRobo().getX()+1, 5.0F, this.startPaintColor);
 
         this.setPaint(this.wheelPaintColor, this.wheelColor);
 
 
-        // Draw wheels
+        // Draw servo
         RectF rectF = new RectF(
-                (float)((this._map.getStartX() - 0.75) * this.cellSize), //left
-                (float)((this._map.getStartY() - 0.65) * this.cellSize), //top - bound
-                (float)((this._map.getStartX() - 0.25) * this.cellSize), //right - width
-                (float)((this._map.getStartY() + 0.15) * this.cellSize) //bottom - height
+                (float)((this._map.getRobo().getX() - 0.75) * this.cellSize), //left
+                (float)((this._map.getRobo().getY() - 0.65) * this.cellSize), //top - bound
+                (float)((this._map.getRobo().getX() - 0.25) * this.cellSize), //right - width
+                (float)((this._map.getRobo().getY() + 0.15) * this.cellSize) //bottom - height
         );
 
         canvas.drawRoundRect(
@@ -212,10 +213,10 @@ public final class GridMapCanvas extends View {
         );
 
         RectF rectv = new RectF(
-                (float)((this._map.getStartX() - 0.75 + 1) * this.cellSize), //left
-                (float)((this._map.getStartY() - 0.65) * this.cellSize), //top - bound
-                (float)((this._map.getStartX() - 0.25 + 1) * this.cellSize), //right - width
-                (float)((this._map.getStartY() + 0.15) * this.cellSize) //bottom - height
+                (float)((this._map.getRobo().getX() - 0.75 + 1) * this.cellSize), //left
+                (float)((this._map.getRobo().getY() - 0.65) * this.cellSize), //top - bound
+                (float)((this._map.getRobo().getX() - 0.25 + 1) * this.cellSize), //right - width
+                (float)((this._map.getRobo().getY() + 0.15) * this.cellSize) //bottom - height
         );
 
         canvas.drawRoundRect(
@@ -302,12 +303,18 @@ public final class GridMapCanvas extends View {
                     x = (int) (ceil(eventX / cellSize));
                     t = _map.findTarget(x, y);
 
+                    final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
+                        public void onLongPress(MotionEvent e) {
+                            dragCell(x, y, turn, 1);
+                        }
+                    });
+
                     this.turn = (t != null)
                             ? TARGET_BLOCK_TURN
-                            : ((x == this._map.getStartX() && y == this._map.getStartY()) ||
-                            (x == this._map.getStartX() && y == this._map.getStartY()+1) ||
-                            (x == this._map.getStartX()+1 && y == this._map.getStartY()) ||
-                            (x == this._map.getStartX()+1 && y == this._map.getStartY()+1))
+                            : ((x == this._map.getRobo().getX() && y == this._map.getRobo().getY()) ||
+                            (x == this._map.getRobo().getX() && y == this._map.getRobo().getY()+1) ||
+                            (x == this._map.getRobo().getX()+1 && y == this._map.getRobo().getY()) ||
+                            (x == this._map.getRobo().getX()+1 && y == this._map.getRobo().getY()+1))
                             ? CAR_BLOCK_TURN
                             : NEW_TARGET_TURN;
 
@@ -316,7 +323,8 @@ public final class GridMapCanvas extends View {
                         _map.setLastTouchedTarget(t);
 
                     if (this.turn == NEW_TARGET_TURN) {
-                        this.dragCell(x, y, this.turn, 1);
+                        // LONG PRESS TO MAKE NEW
+                        return gestureDetector.onTouchEvent(event);
                     }
 
                     break;
@@ -344,18 +352,18 @@ public final class GridMapCanvas extends View {
                 && (this._map.getBoard()[x][y+1] != TARGET_CELL_CODE) && (this._map.getBoard()[x+1][y] != TARGET_CELL_CODE)
             ) {
 
-                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()] = EMPTY_CELL_CODE;
-                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()+1] = EMPTY_CELL_CODE;
-                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()] = EMPTY_CELL_CODE;
-                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()+1] = EMPTY_CELL_CODE;
+                this._map.getBoard()[this._map.getRobo().getX()][this._map.getRobo().getY()] = EMPTY_CELL_CODE;
+                this._map.getBoard()[this._map.getRobo().getX()][this._map.getRobo().getY()+1] = EMPTY_CELL_CODE;
+                this._map.getBoard()[this._map.getRobo().getX()+1][this._map.getRobo().getY()] = EMPTY_CELL_CODE;
+                this._map.getBoard()[this._map.getRobo().getX()+1][this._map.getRobo().getY()+1] = EMPTY_CELL_CODE;
 
-                this._map.setStartX(x);
-                this._map.setStartY(y);
+                this._map.getRobo().setX(x);
+                this._map.getRobo().setY(y);
 
-                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()] = CAR_CELL_CODE;
-                this._map.getBoard()[this._map.getStartX()][this._map.getStartY()+1] = CAR_CELL_CODE;
-                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()] = CAR_CELL_CODE;
-                this._map.getBoard()[this._map.getStartX()+1][this._map.getStartY()+1] = CAR_CELL_CODE;
+                this._map.getBoard()[this._map.getRobo().getX()][this._map.getRobo().getY()] = CAR_CELL_CODE;
+                this._map.getBoard()[this._map.getRobo().getX()][this._map.getRobo().getY()+1] = CAR_CELL_CODE;
+                this._map.getBoard()[this._map.getRobo().getX()+1][this._map.getRobo().getY()] = CAR_CELL_CODE;
+                this._map.getBoard()[this._map.getRobo().getX()+1][this._map.getRobo().getY()+1] = CAR_CELL_CODE;
             }
 
         } else if (turn == TARGET_BLOCK_TURN) {
