@@ -26,9 +26,9 @@ public class MessageFragment extends Fragment {
     private static String statusWindowTxt = "";
 
     Button send;
-    TextView messageReceivedTextView;
+    static TextView messageReceivedTextView;
     EditText typeBoxEditText;
-    ScrollView scrollView;
+    static ScrollView scrollView;
 
     // initializations
     public MessageFragment() {}
@@ -54,16 +54,20 @@ public class MessageFragment extends Fragment {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String sentText = "" + typeBoxEditText.getText().toString();
-                BluetoothService.getInstance(null, null).sendMessage(sentText);
-                statusWindowTxt += sentText + '\n';
-                messageReceivedTextView.setText(statusWindowTxt);
-                scrollView.fullScroll(View.FOCUS_DOWN);
+                String input = "" + typeBoxEditText.getText().toString();
+                sendMessage(input);
                 typeBoxEditText.setText("");
             }
         });
 
         return rootView;
+    }
+
+    public static void sendMessage(String sentText) {
+        BluetoothService.getInstance(null, null).sendMessage(sentText);
+        statusWindowTxt += sentText + '\n';
+        messageReceivedTextView.setText(statusWindowTxt);
+        scrollView.fullScroll(View.FOCUS_DOWN);
     }
 
     public static void addTextToStatusWindow(Activity activity, String stringToAdd) {

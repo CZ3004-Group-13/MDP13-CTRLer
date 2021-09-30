@@ -2,6 +2,9 @@ package ntu.scse.mdp13.map;
 
 import static ntu.scse.mdp13.map.BoardMap.TARGET_CELL_CODE;
 
+import ntu.scse.mdp13.bluetooth.BluetoothService;
+import ntu.scse.mdp13.bluetooth.MessageFragment;
+
 public class Robot {
     private int x, y, s, m, f;
 
@@ -19,6 +22,10 @@ public class Robot {
     public static final int ROBOT_FACE_EAST = 1;
     public static final int ROBOT_FACE_SOUTH = 2;
     public static final int ROBOT_FACE_WEST = 3;
+
+    public static final String STM_COMMAND_FORWARD = "f";
+    public static final String STM_COMMAND_REVERSE = "r";
+    public static final String STM_COMMAND_STOP = "s";
 
     public Robot(BoardMap map) {
         this.x = 1;

@@ -1,5 +1,12 @@
 package ntu.scse.mdp13;
 
+import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_FORWARD;
+import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_REVERSE;
+import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_STOP;
+import static ntu.scse.mdp13.map.Robot.STM_COMMAND_FORWARD;
+import static ntu.scse.mdp13.map.Robot.STM_COMMAND_REVERSE;
+import static ntu.scse.mdp13.map.Robot.STM_COMMAND_STOP;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
@@ -18,6 +25,7 @@ import android.widget.ImageButton;
 
 import biz.laenger.android.vpbs.BottomSheetUtils;
 import ntu.scse.mdp13.bluetooth.BluetoothFragment;
+import ntu.scse.mdp13.bluetooth.MessageFragment;
 import ntu.scse.mdp13.bluetooth.PagerAdapter;
 import ntu.scse.mdp13.bluetooth.PagerAdapter.TabItem;
 
@@ -64,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setupLongClicks(btnForward, Robot.ROBOT_MOTOR_FORWARD);
-        setupLongClicks(btnReverse, Robot.ROBOT_MOTOR_REVERSE);
+        setupLongClicks(btnForward, ROBOT_MOTOR_FORWARD);
+        setupLongClicks(btnReverse, ROBOT_MOTOR_REVERSE);
 
     }
 
@@ -86,11 +94,13 @@ public class MainActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         if (mHandler != null) return true;
                         mHandler = new Handler();
+                        MessageFragment.sendMessage(direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE);
                         mHandler.postDelayed(mAction, DELAYms);
                         break;
                     case MotionEvent.ACTION_UP:
                         if (mHandler == null) return true;
-                        mapCanvas.getFinder().getRobo().setMotor(Robot.ROBOT_MOTOR_STOP);
+                        MessageFragment.sendMessage(STM_COMMAND_STOP);
+                        mapCanvas.getFinder().getRobo().setMotor(ROBOT_MOTOR_STOP);
                         mHandler.removeCallbacks(mAction);
                         mHandler = null;
                         break;
