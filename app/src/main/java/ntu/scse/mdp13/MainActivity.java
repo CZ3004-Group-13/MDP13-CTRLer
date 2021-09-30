@@ -36,7 +36,7 @@ import ntu.scse.mdp13.map.Robot;
 public class MainActivity extends AppCompatActivity {
 
     MapCanvas mapCanvas;
-    private BoardMap finder = new BoardMap();
+    private BoardMap _map = new BoardMap();
     Button btnReset;
     ImageButton btnForward;
     ImageButton btnReverse;
@@ -61,13 +61,13 @@ public class MainActivity extends AppCompatActivity {
 
         setupBottomSheet();
 
-        finder = mapCanvas.getFinder();
+        _map = mapCanvas.getFinder();
 
         btnReset.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 mapCanvas.setSolving(false);
-                finder.resetGrid();
+                _map.resetGrid();
                 mapCanvas.invalidate();
             }
         });
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mapCanvas.getFinder().getRobo().motorRotate(direction);
+                _map.getRobo().motorRotate(direction);
             }
         });
         btn.setOnTouchListener(new View.OnTouchListener() {
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                         if (mHandler == null) return true;
                         MessageFragment.sendMessage("BRLS -> RPI:\t\t", STM_COMMAND_STOP);
                         MessageFragment.addSeparator();
-                        mapCanvas.getFinder().getRobo().setMotor(ROBOT_MOTOR_STOP);
+                        _map.getRobo().setMotor(ROBOT_MOTOR_STOP);
                         mHandler.removeCallbacks(mAction);
                         mHandler = null;
                         break;
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
             Runnable mAction = new Runnable() {
                 @Override public void run() {
-                    mapCanvas.getFinder().getRobo().motorRotate(direction);
+                    _map.getRobo().motorRotate(direction);
                     mHandler.postDelayed(this, DELAYms);
                 }
             };

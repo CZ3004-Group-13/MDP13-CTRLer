@@ -51,12 +51,6 @@ public class BluetoothFragment extends Fragment {
     // Bluetooth service
     private static BluetoothService mBluetoothService;
 
-    //!public static GridMapUpdateManager mapUpdateManager;
-    //!public static GridMapFragment gridMapFragment;
-
-    //debug
-    public static Boolean isDebug = false;
-
     // Connection handler
     private final Handler mHandler = new Handler(new Handler.Callback() {
         @Override
@@ -94,13 +88,10 @@ public class BluetoothFragment extends Fragment {
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     Log.d("Message received", readMessage);
-                    if(isDebug){
-                        //!ridMapFragment.addTextToStatusWindow(activity, readMessage);
-                    }
+
                     if (activity != null) {
-                        MessageFragment.receiveMessage(readMessage);
+                        MessageFragment.receiveMessage(activity, readMessage);
                     }
-                    //!mapUpdateManager.decodeMessage(getContext(), readMessage);
                     break;
                 case BluetoothService.HandlerConstants.MESSAGE_WRITE:
                     byte[] writeBuf = (byte[]) msg.obj;

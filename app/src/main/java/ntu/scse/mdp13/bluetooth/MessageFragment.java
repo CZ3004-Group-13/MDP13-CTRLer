@@ -1,14 +1,17 @@
 package ntu.scse.mdp13.bluetooth;
 
+import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_FORWARD;
+import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_REVERSE;
+import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_STOP;
+import static ntu.scse.mdp13.map.Robot.STM_COMMAND_FORWARD;
+import static ntu.scse.mdp13.map.Robot.STM_COMMAND_REVERSE;
+import static ntu.scse.mdp13.map.Robot.STM_COMMAND_STOP;
+
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import ntu.scse.mdp13.R;
+import ntu.scse.mdp13.map.BoardMap;
+import ntu.scse.mdp13.map.MapCanvas;
 
 public class MessageFragment extends Fragment {
 
@@ -75,10 +80,21 @@ public class MessageFragment extends Fragment {
         messageReceivedTextView.setText(statusWindowTxt);
     }
 
-    public static void receiveMessage(String msg) {
+    public static void receiveMessage(Activity activity, String msg) {
         try {
+            BoardMap _map = ((MapCanvas) activity.findViewById(R.id.pathGrid)).getFinder();
+
             statusWindowTxt += "RPI -> BLTH:\t\t" + msg + "\n";
             statusWindowTxt = statusWindowTxt.replace("\n\n", "\n");
+
+            switch(msg) {
+                case STM_COMMAND_FORWARD:
+                case STM_COMMAND_REVERSE:
+                    _map.getRobo().motorRotate(msg.equals("f") ? ROBOT_MOTOR_FORWARD : ROBOT_MOTOR_REVERSE);
+                    MessageFragment.sendMessage("MFIN -> RPI:\t\t", STM_COMMAND_STOP);
+                    MessageFragment.addSeparator();
+                    _map.getRobo().setMotor(ROBOT_MOTOR_STOP);
+            }
 
             messageReceivedTextView.setText(statusWindowTxt);
             scrollView.fullScroll(View.FOCUS_DOWN);
