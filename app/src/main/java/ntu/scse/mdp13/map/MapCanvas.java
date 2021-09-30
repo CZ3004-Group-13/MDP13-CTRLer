@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Paint.Style;
 import android.os.Handler;
@@ -29,6 +30,9 @@ import static ntu.scse.mdp13.map.BoardMap.EXPLORE_CELL_CODE;
 import static ntu.scse.mdp13.map.BoardMap.EXPLORE_HEAD_CELL_CODE;
 import static ntu.scse.mdp13.map.BoardMap.FINAL_PATH_CELL_CODE;
 import static ntu.scse.mdp13.map.BoardMap.CAR_CELL_CODE;
+import static ntu.scse.mdp13.map.Robot.ROBOT_SERVO_CENTRE;
+import static ntu.scse.mdp13.map.Robot.ROBOT_SERVO_LEFT;
+import static ntu.scse.mdp13.map.Robot.ROBOT_SERVO_RIGHT;
 import static ntu.scse.mdp13.map.Target.TARGET_FACE_NORTH;
 import static ntu.scse.mdp13.map.Target.TARGET_FACE_EAST;
 import static ntu.scse.mdp13.map.Target.TARGET_FACE_WEST;
@@ -190,14 +194,26 @@ public final class MapCanvas extends View {
         this.setPaint(this.startPaintColor, this.startColor);
 
         this.colorCell(canvas, this._map.getRobo().getY(), this._map.getRobo().getX(), 5.0F, this.startPaintColor);
-        this.colorCell(canvas, this._map.getRobo().getY(), this._map.getRobo().getX()+1, 5.0F, this.startPaintColor);
-        this.colorCell(canvas, this._map.getRobo().getY()+1, this._map.getRobo().getX(), 5.0F, this.startPaintColor);
-        this.colorCell(canvas, this._map.getRobo().getY()+1, this._map.getRobo().getX()+1, 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getRobo().getY(), this._map.getRobo().getX() + 1, 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getRobo().getY() + 1, this._map.getRobo().getX(), 5.0F, this.startPaintColor);
+        this.colorCell(canvas, this._map.getRobo().getY() + 1, this._map.getRobo().getX() + 1, 5.0F, this.startPaintColor);
 
         this.setPaint(this.wheelPaintColor, this.wheelColor);
 
-
         // Draw servo
+        if (this._map.getRobo().getServo() != ROBOT_SERVO_CENTRE) {
+            canvas.save();
+
+            switch(this._map.getRobo().getServo()) {
+                case ROBOT_SERVO_LEFT:
+                    canvas.rotate(-45, this._map.getRobo().getX() + 0.33f * this.cellSize, this._map.getRobo().getY() + 18.25f * this.cellSize);
+                    break;
+                case ROBOT_SERVO_RIGHT:
+                    canvas.rotate(45, this._map.getRobo().getX() + 0.5f * this.cellSize, this._map.getRobo().getY() + 18.25f * this.cellSize);
+                    break;
+            }
+        }
+
         RectF rectF = new RectF(
                 (float)((this._map.getRobo().getX() - 0.75) * this.cellSize), //left
                 (float)((this._map.getRobo().getY() - 0.65) * this.cellSize), //top - bound
@@ -212,6 +228,20 @@ public final class MapCanvas extends View {
                 this.wheelPaintColor // Paint
         );
 
+        if (this._map.getRobo().getServo() != ROBOT_SERVO_CENTRE) {
+            canvas.restore();
+            canvas.save();
+
+            switch(this._map.getRobo().getServo()) {
+                case ROBOT_SERVO_LEFT:
+                    canvas.rotate(-45, this._map.getRobo().getX() + 1.33f * this.cellSize, this._map.getRobo().getY() + 18.25f * this.cellSize);
+                    break;
+                case ROBOT_SERVO_RIGHT:
+                    canvas.rotate(45, this._map.getRobo().getX() + 1.5f * this.cellSize, this._map.getRobo().getY() + 18.25f * this.cellSize);
+                    break;
+            }
+        }
+
         RectF rectv = new RectF(
                 (float)((this._map.getRobo().getX() - 0.75 + 1) * this.cellSize), //left
                 (float)((this._map.getRobo().getY() - 0.65) * this.cellSize), //top - bound
@@ -225,6 +255,9 @@ public final class MapCanvas extends View {
                 5F, // ry
                 this.wheelPaintColor // Paint
         );
+
+
+        if (this._map.getRobo().getServo() == ROBOT_SERVO_LEFT || this._map.getRobo().getServo() == ROBOT_SERVO_RIGHT) canvas.restore();
 
         this.invalidate();
     }

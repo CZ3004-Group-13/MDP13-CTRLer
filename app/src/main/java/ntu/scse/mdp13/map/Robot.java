@@ -26,6 +26,9 @@ public class Robot {
     public static final String STM_COMMAND_FORWARD = "f";
     public static final String STM_COMMAND_REVERSE = "r";
     public static final String STM_COMMAND_STOP = "s";
+    public static final String STM_COMMAND_LEFT = "l";
+    public static final String STM_COMMAND_RIGHT = "r";
+    public static final String STM_COMMAND_CENTRE = "c";
 
     public Robot(BoardMap map) {
         this.x = 1;
@@ -72,6 +75,10 @@ public class Robot {
                 }
             }
         }
+    }
+
+    public void servoTurn(int direction) {
+        this.s = direction == ROBOT_SERVO_LEFT ? ROBOT_SERVO_LEFT : ROBOT_SERVO_RIGHT;
     }
 
     @Override
