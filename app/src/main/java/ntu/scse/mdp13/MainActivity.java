@@ -94,12 +94,13 @@ public class MainActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         if (mHandler != null) return true;
                         mHandler = new Handler();
-                        MessageFragment.sendMessage(direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE);
+                        MessageFragment.sendMessage("BTNHLD -> RPI:\t", (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE));
                         mHandler.postDelayed(mAction, DELAYms);
                         break;
                     case MotionEvent.ACTION_UP:
                         if (mHandler == null) return true;
-                        MessageFragment.sendMessage(STM_COMMAND_STOP);
+                        MessageFragment.sendMessage("BTNRLS -> RPI:\t", STM_COMMAND_STOP);
+                        MessageFragment.addSeparator();
                         mapCanvas.getFinder().getRobo().setMotor(ROBOT_MOTOR_STOP);
                         mHandler.removeCallbacks(mAction);
                         mHandler = null;

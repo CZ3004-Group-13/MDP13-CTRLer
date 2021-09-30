@@ -55,7 +55,7 @@ public class MessageFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String input = "" + typeBoxEditText.getText().toString();
-                sendMessage(input);
+                sendMessage("TXTBOX -> RPI:\t", input);
                 typeBoxEditText.setText("");
             }
         });
@@ -63,11 +63,16 @@ public class MessageFragment extends Fragment {
         return rootView;
     }
 
-    public static void sendMessage(String sentText) {
+    public static void sendMessage(String prefix, String sentText) {
         BluetoothService.getInstance(null, null).sendMessage(sentText);
-        statusWindowTxt += sentText + '\n';
+        statusWindowTxt += prefix + sentText + '\n';
         messageReceivedTextView.setText(statusWindowTxt);
         scrollView.fullScroll(View.FOCUS_DOWN);
+    }
+
+    public static void addSeparator() {
+        statusWindowTxt += "----------------------------------" + '\n';
+        messageReceivedTextView.setText(statusWindowTxt);
     }
 
     public static void addTextToStatusWindow(Activity activity, String stringToAdd) {
