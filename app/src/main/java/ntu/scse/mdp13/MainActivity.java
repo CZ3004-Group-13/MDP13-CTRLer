@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         });
         btn.setOnTouchListener(new View.OnTouchListener() {
 
-            private int DELAYms = 500;
+            private int DELAYms = 250;
             private Handler mHandler;
 
             @Override public boolean onTouch(View v, MotionEvent event) {

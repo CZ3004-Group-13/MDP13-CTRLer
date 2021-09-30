@@ -68,9 +68,9 @@ public class MessageFragment extends Fragment {
         return rootView;
     }
 
-    public static void sendMessage(String prefix, String sentText) {
-        BluetoothService.getInstance(null, null).sendMessage(sentText);
-        statusWindowTxt += prefix + sentText + '\n';
+    public static void sendMessage(String prefix, String txt) {
+        BluetoothService.getInstance(null, null).sendMessage(txt);
+        statusWindowTxt += prefix + txt + '\n';
         messageReceivedTextView.setText(statusWindowTxt);
         scrollView.fullScroll(View.FOCUS_DOWN);
     }
