@@ -55,7 +55,7 @@ public class MessageFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String input = "" + typeBoxEditText.getText().toString();
-                sendMessage("TXTBOX -> RPI:\t", input);
+                sendMessage("TXTB -> RPI:\t\t", input);
                 typeBoxEditText.setText("");
             }
         });
@@ -71,19 +71,16 @@ public class MessageFragment extends Fragment {
     }
 
     public static void addSeparator() {
-        statusWindowTxt += "----------------------------------" + '\n';
+        statusWindowTxt += "----------------------------------------------------" + '\n';
         messageReceivedTextView.setText(statusWindowTxt);
     }
 
-    public static void addTextToStatusWindow(Activity activity, String stringToAdd) {
+    public static void receiveMessage(String msg) {
         try {
-            TextView statusWindow = activity.findViewById(R.id.messageReceivedTextView);
-            ScrollView scrollView = activity.findViewById(R.id.scrollView2D);
-
-            statusWindowTxt += stringToAdd + "\n";
+            statusWindowTxt += "RPI -> BLTH:\t\t" + msg + "\n";
             statusWindowTxt = statusWindowTxt.replace("\n\n", "\n");
 
-            statusWindow.setText(statusWindowTxt);
+            messageReceivedTextView.setText(statusWindowTxt);
             scrollView.fullScroll(View.FOCUS_DOWN);
         } catch (Exception e) {
             //user switched fragment

@@ -98,7 +98,7 @@ public class BluetoothFragment extends Fragment {
                         //!ridMapFragment.addTextToStatusWindow(activity, readMessage);
                     }
                     if (activity != null) {
-                        MessageFragment.addTextToStatusWindow(activity, readMessage);
+                        MessageFragment.receiveMessage(readMessage);
                     }
                     //!mapUpdateManager.decodeMessage(getContext(), readMessage);
                     break;
