@@ -14,6 +14,9 @@ import static ntu.scse.mdp13.map.Robot.STM_COMMAND_RIGHT;
 import static ntu.scse.mdp13.map.Robot.STM_COMMAND_STOP;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.os.Handler;
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     MapCanvas mapCanvas;
     private BoardMap _map = new BoardMap();
     Button btnReset;
+    Button btnTarget;
     ImageButton btnForward;
     ImageButton btnReverse;
     ImageButton btnLeft;
@@ -66,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         this.setContentView(R.layout.activty_main);
         mapCanvas = findViewById(R.id.pathGrid);
         btnReset = (Button) this.findViewById(R.id.btn_reset);
+        btnTarget = (Button) this.findViewById(R.id.btn_target);
         btnForward = (ImageButton) this.findViewById(R.id.btn_accelerate);
         btnReverse = (ImageButton) this.findViewById(R.id.btn_reverse);
         btnLeft = (ImageButton) this.findViewById(R.id.btn_left);
@@ -77,6 +82,18 @@ public class MainActivity extends AppCompatActivity {
         setupBottomSheet();
 
         _map = mapCanvas.getFinder();
+
+        btnTarget.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int n = 0;
+                while (n < _map.getTargets().size()) {
+                    String message;
+                    message = "OBS|[" + n + "," + _map.getTargets().get(n).getX() + "," + _map.getTargets().get(n).getY() + "," + _map.getTargets().get(n).getF() + "]";
+                    MessageFragment.sendMessage("MAP -> RPI:\t\t ", message);
+                    n++;
+                }}
+        });
 
         btnReset.setOnClickListener(new OnClickListener() {
             @Override
@@ -158,7 +175,10 @@ public class MainActivity extends AppCompatActivity {
                         mHandler.removeCallbacks(mAction);
                         mHandler = null;
                         break;
+
+
                 }
+
                 return false;
             }
 
@@ -183,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
 
         });
     }
-
 
     private void setupBottomSheet() {
         bottomSheetToolbar.setTitle(R.string.bottom_sheet_title);

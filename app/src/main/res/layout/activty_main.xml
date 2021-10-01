@@ -7,10 +7,7 @@
     android:fitsSystemWindows="false"
     tools:context=".MainActivity">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/mainlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,9 +24,9 @@
             android:layout_marginEnd="-7dp"
             android:background="@color/black_hl"
             android:minHeight="?android:attr/actionBarSize"
-            custom:layout_constraintEnd_toEndOf="parent"
-            custom:layout_constraintStart_toStartOf="parent"
-            custom:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <Button
                 android:layout_width="wrap_content"
@@ -66,18 +63,18 @@
             android:layout_height="wrap_content"
             android:longClickable="true"
             app:finalPathColor="#CBC6FF00"
-            custom:wheelColor="@color/black_hl"
+            app:wheelColor="@color/black_hl"
             app:exploreHeadColor="@color/blue_hl"
-            custom:roboColor="@color/blue"
-            custom:gridColor="@color/black_bg"
+            app:roboColor="@color/blue"
+            app:gridColor="@color/black_bg"
             app:exploreColor="@color/yellow"
-            custom:targetColor="@color/red"
-            custom:tarNumColor="@color/white"
+            app:targetColor="@color/red"
+            app:tarNumColor="@color/white"
             android:layout_marginStart="10dp"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_top"
             app:layout_constraintStart_toEndOf="parent"
-            custom:layout_constraintEnd_toEndOf="parent"
-            custom:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -223,6 +220,24 @@
             app:layout_constraintStart_toStartOf="@+id/guideline3"
             app:rippleColor="#FFECB3" />
 
+
+        <Button
+            android:id="@+id/btn_target"
+            android:layout_width="125dp"
+            android:layout_height="44dp"
+            android:layout_marginBottom="224dp"
+            android:backgroundTint="@color/black_hl"
+            android:fontFamily="@font/open_sans_light"
+            android:text="Send All Targets"
+            android:textSize="10sp"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/mainlayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintHorizontal_bias="0.479"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:rippleColor="#FFECB3" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline3"

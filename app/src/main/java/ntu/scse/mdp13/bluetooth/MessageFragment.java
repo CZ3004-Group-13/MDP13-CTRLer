@@ -94,6 +94,16 @@ public class MessageFragment extends Fragment {
                     MessageFragment.sendMessage("MFIN -> RPI:\t\t", STM_COMMAND_STOP);
                     MessageFragment.addSeparator();
                     _map.getRobo().setMotor(ROBOT_MOTOR_STOP);
+                case ("TARGET"):
+                   // if (septext[u].substring(0, 6).equalsIgnoreCase("TARGET")) {
+                       // String[] seperatedtext = septext[u].split("\\|");
+
+                        //Coords c = map.get(seperatedtext[2]);
+                        //int x1 = c.getX();
+                       // int y1 = c.getY();
+                       // int id1 = Integer.parseInt(seperatedtext[1]);
+                        //String dir1 = seperatedtext[3];
+                        //gridMap.drawImageNumberCell(x1, y1, id1, dir1);
             }
 
             messageReceivedTextView.setText(statusWindowTxt);
