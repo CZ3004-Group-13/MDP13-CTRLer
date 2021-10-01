@@ -24,8 +24,8 @@ public class Robot {
     public static final int ROBOT_FACE_WEST = 3;
 
     public static final String STM_COMMAND_FORWARD = "f";
-    public static final String STM_COMMAND_REVERSE = "r";
-    public static final String STM_COMMAND_STOP = "s";
+    public static final String STM_COMMAND_REVERSE = "b";
+    public static final String STM_COMMAND_STOP = "x";
     public static final String STM_COMMAND_LEFT = "l";
     public static final String STM_COMMAND_RIGHT = "r";
     public static final String STM_COMMAND_CENTRE = "c";
