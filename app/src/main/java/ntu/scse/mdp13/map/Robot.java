@@ -106,20 +106,18 @@ public class Robot {
                 break;
         }
 
-        if ((direction == ROBOT_MOTOR_FORWARD && forwardInGrid) || (direction == ROBOT_MOTOR_REVERSE && reverseInGrid )) {
-            if ((direction == ROBOT_MOTOR_FORWARD && forwardAvoidTarget) || (direction == ROBOT_MOTOR_REVERSE && reverseAvoidTarget )) {
-                this.m = direction == ROBOT_MOTOR_FORWARD ? ROBOT_MOTOR_FORWARD : ROBOT_MOTOR_REVERSE;
-                switch(this.f) {
-                    case ROBOT_FACE_NORTH:
-                    case ROBOT_FACE_SOUTH:
-                        this.y += direction == ROBOT_MOTOR_FORWARD ? FORWARD : REVERSE;
-                        break;
-                    case ROBOT_FACE_EAST:
-                    case ROBOT_FACE_WEST:
-                        this.x += direction == ROBOT_MOTOR_FORWARD ? FORWARD : REVERSE;
-                        break;
-                }
-
+        if ((direction == ROBOT_MOTOR_FORWARD && forwardInGrid && forwardAvoidTarget)
+            || (direction == ROBOT_MOTOR_REVERSE && reverseInGrid && reverseAvoidTarget)) {
+            this.m = direction == ROBOT_MOTOR_FORWARD ? ROBOT_MOTOR_FORWARD : ROBOT_MOTOR_REVERSE;
+            switch(this.f) {
+                case ROBOT_FACE_NORTH:
+                case ROBOT_FACE_SOUTH:
+                    this.y += direction == ROBOT_MOTOR_FORWARD ? FORWARD : REVERSE;
+                    break;
+                case ROBOT_FACE_EAST:
+                case ROBOT_FACE_WEST:
+                    this.x += direction == ROBOT_MOTOR_FORWARD ? FORWARD : REVERSE;
+                    break;
             }
         }
     }

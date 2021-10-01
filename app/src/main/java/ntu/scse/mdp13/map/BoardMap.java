@@ -1,5 +1,6 @@
 package ntu.scse.mdp13.map;
 
+import static ntu.scse.mdp13.map.Robot.ROBOT_FACE_NORTH;
 import static ntu.scse.mdp13.map.Target.TARGET_FACE_NORTH;
 
 import android.util.Log;
@@ -29,17 +30,17 @@ public class BoardMap {
         robo = new Robot(this);
         board[robo.getX()][robo.getY()] = CAR_CELL_CODE;
 
-        targets.add(new Target(10, 21-10, targets.size())); // 10, 10
-        targets.add(new Target(15, 21-15, targets.size())); // 15, 15
-        targets.add(new Target(15, 21-5, targets.size())); // 15, 5
-        targets.add(new Target(20, 21-20, targets.size())); // 20, 20
-        targets.add(new Target(20, 21-1, targets.size())); // 20, 1
+        // targets.add(new Target(10, 21-10, targets.size())); // 10, 10
+        // targets.add(new Target(15, 21-15, targets.size())); // 15, 15
+        // targets.add(new Target(15, 21-5, targets.size())); // 15, 5
+        // targets.add(new Target(20, 21-20, targets.size())); // 20, 20
+        // targets.add(new Target(20, 21-1, targets.size())); // 20, 1
 
-        int n = 0;
-        while (n < targets.size()) {
-            board[targets.get(n).getX()][targets.get(n).getY()] = TARGET_CELL_CODE;
-            n++;
-        }
+        // int n = 0;
+        // while (n < targets.size()) {
+            // board[targets.get(n).getX()][targets.get(n).getY()] = TARGET_CELL_CODE;
+            // n++;
+        // }
     }
 
     public final void resetGrid() {
@@ -49,20 +50,9 @@ public class BoardMap {
 
         this.getRobo().setX(1);
         this.getRobo().setY(19);
+        this.getRobo().setFacing(ROBOT_FACE_NORTH);
         targets.clear();
         this.board[getRobo().getX()][getRobo().getY()] = CAR_CELL_CODE;
-
-        targets.add(new Target(10, 21-10, targets.size())); // 10, 10
-        targets.add(new Target(15, 21-15, targets.size())); // 15, 15
-        targets.add(new Target(15, 21-5, targets.size())); // 15, 5
-        targets.add(new Target(20, 21-20, targets.size())); // 20, 20
-        targets.add(new Target(20, 21-1, targets.size())); // 20, 1
-
-        int n = 0;
-        while (n < targets.size()) {
-            board[targets.get(n).getX()][targets.get(n).getY()] = TARGET_CELL_CODE;
-            n++;
-        }
     }
 
     public Robot getRobo() { return robo;}

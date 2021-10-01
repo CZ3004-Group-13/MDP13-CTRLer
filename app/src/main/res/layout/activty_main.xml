@@ -79,6 +79,20 @@
             custom:layout_constraintEnd_toEndOf="parent"
             custom:layout_constraintStart_toStartOf="parent"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/legend"
+            android:text="PRESS + HOLD TO ADD TARGET   |   TAP TO ROTATE   |   DRAG TO MOVE   |   REMOVE - DRAG OUT OF GRID"
+            android:textSize="8sp"
+            android:textColor="@color/grey"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toStartOf="@id/guideline3"
+            app:layout_constraintStart_toEndOf="@id/guideline3"
+            app:layout_constraintTop_toBottomOf="@id/pathGrid"
+            />
+
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -88,7 +102,7 @@
             android:background="@null"
             android:layout_marginTop="30dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pathGrid"
+            app:layout_constraintTop_toBottomOf="@+id/legend"
             />
 
         <ImageButton
@@ -100,7 +114,19 @@
             android:background="@null"
             android:layout_marginTop="30dp"
             app:layout_constraintStart_toEndOf="@id/btn_left"
-            app:layout_constraintTop_toBottomOf="@+id/pathGrid"
+            app:layout_constraintTop_toBottomOf="@+id/legend"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TURN SERVO\nPRESS + HOLD"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="@id/btn_left"
+            app:layout_constraintEnd_toEndOf="@id/btn_right"
+            app:layout_constraintTop_toBottomOf="@id/btn_right"
             />
 
         <ImageButton
@@ -114,18 +140,32 @@
             android:layout_marginTop="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pathGrid"
-        />
+            />
 
-        <ImageButton
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_hud_stop"
-            android:tint="@color/red"
-            android:background="@null"
-            android:layout_marginTop="10dp"
-            app:layout_constraintRight_toLeftOf="@id/btn_accelerate"
-            app:layout_constraintTop_toBottomOf="@+id/pathGrid"
+            android:text="FORWARD"
+            android:textSize="10sp"
+            android:textColor="@color/blue_hl"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="@id/btn_accelerate"
+            app:layout_constraintEnd_toEndOf="@id/btn_accelerate"
+            app:layout_constraintTop_toBottomOf="@id/btn_accelerate"
             />
+
+        <!--        <ImageButton-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:srcCompat="@drawable/ic_hud_stop"-->
+        <!--            android:tint="@color/red"-->
+        <!--            android:background="@null"-->
+        <!--            android:layout_marginTop="5dp"-->
+        <!--            android:layout_marginEnd="-10dp"-->
+        <!--            app:layout_constraintRight_toLeftOf="@id/btn_accelerate"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/legend"-->
+        <!--            />-->
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -135,9 +175,36 @@
             android:longClickable="true"
             android:tint="@color/blue"
             android:background="@null"
-            android:layout_marginTop="65dp"
+            android:layout_marginTop="60dp"
             app:layout_constraintRight_toLeftOf="@id/btn_accelerate"
             app:layout_constraintTop_toBottomOf="@+id/pathGrid"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtLbl"
+            android:text="REVERSE"
+            android:textSize="10sp"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="@id/btn_reverse"
+            app:layout_constraintEnd_toEndOf="@id/btn_reverse"
+            app:layout_constraintTop_toBottomOf="@id/btn_reverse"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QUICK TAP / PRESS + HOLD"
+            android:textSize="10sp"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="@id/btn_reverse"
+            app:layout_constraintEnd_toEndOf="@id/btn_accelerate"
+            app:layout_constraintTop_toBottomOf="@id/txtLbl"
             />
 
         <Button

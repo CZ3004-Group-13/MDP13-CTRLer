@@ -185,6 +185,7 @@ public final class MapCanvas extends View {
     }
 
     private void drawGridNumber(Canvas canvas) {
+        this.setPaint(this.endPaintColor, this.endColor);
         float halfSize = this.cellSize * 0.38f;
         for (int x = 19; x >= 0; --x) {
             // Left Vertical
