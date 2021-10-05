@@ -331,13 +331,13 @@ public final class MapCanvas extends View {
         if (this._map.getTargets().get(tarNum).getImg() > 0)
         {
             Paint textPaint = new Paint();
-            textPaint.setTextSize(40);
+            textPaint.setTextSize(30);
             textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
             textPaint.setColor(Color.WHITE);
             textPaint.setTextAlign(Paint.Align.CENTER);
             canvas.drawText(Integer.toString(this._map.getTargets().get(tarNum).getImg()),
-                    this.cellSize * (x - 1) + this.cellSize * 0.4f,
-                    this.cellSize * y - this.cellSize * 0.4f,
+                    this.cellSize * (x - 1) + this.cellSize * 0.5f,
+                    this.cellSize * y - this.cellSize * 0.25f,
                     textPaint
             );
         }
