@@ -103,7 +103,7 @@ public class MessageFragment extends Fragment {
                     int imageid = Integer.parseInt(parts[2]);;
                     message = "target id = " + targetid + "," + "img id = " + imageid;
                     MessageFragment.sendMessage("ANDROID -> RPI:\t\t ", message);
-                    Target t = _map.getTargets().get(targetid);
+                    Target t = _map.getTargets().get(targetid-1);
                     t.setImg(imageid);
 
             }
