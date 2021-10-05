@@ -1,9 +1,8 @@
 package ntu.scse.mdp13.map;
 
-import android.util.Log;
-
 public class Target {
     private int x, y, n, f;
+    private int img = 0;
 
     public static final int TARGET_FACE_NORTH = 0;
     public static final int TARGET_FACE_EAST = 1;
@@ -15,6 +14,14 @@ public class Target {
         this.y = y;
         this.n = n;
         this.f = 0;
+    }
+
+    public void setImg(int img) {
+        this.img = img;
+    }
+
+    public int getImg() {
+        return img;
     }
 
     public int getX() {

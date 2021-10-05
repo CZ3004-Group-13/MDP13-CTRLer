@@ -23,6 +23,7 @@ import android.widget.TextView;
 import ntu.scse.mdp13.R;
 import ntu.scse.mdp13.map.BoardMap;
 import ntu.scse.mdp13.map.MapCanvas;
+import ntu.scse.mdp13.map.Target;
 
 public class MessageFragment extends Fragment {
 
@@ -87,23 +88,24 @@ public class MessageFragment extends Fragment {
             statusWindowTxt += "RPI -> BLTH:\t\t" + msg + "\n";
             statusWindowTxt = statusWindowTxt.replace("\n\n", "\n");
 
-            switch(msg) {
+            String[] parts = msg.split("\\|");
+            switch(parts[0]) {
                 case STM_COMMAND_FORWARD:
                 case STM_COMMAND_REVERSE:
                     _map.getRobo().motorRotate(msg.equals("f") ? ROBOT_MOTOR_FORWARD : ROBOT_MOTOR_REVERSE);
                     MessageFragment.sendMessage("MFIN -> RPI:\t\t", STM_COMMAND_STOP);
                     MessageFragment.addSeparator();
                     _map.getRobo().setMotor(ROBOT_MOTOR_STOP);
-                case ("TARGET"):
-                   // if (septext[u].substring(0, 6).equalsIgnoreCase("TARGET")) {
-                       // String[] seperatedtext = septext[u].split("\\|");
+                case "TARGET":
+                    //MapCanvas.drawTargetImage(1,2);
+                    String message;
+                    int targetid = Integer.parseInt(parts[1]);
+                    int imageid = Integer.parseInt(parts[2]);;
+                    message = "target id = " + targetid + "," + "img id = " + imageid;
+                    MessageFragment.sendMessage("ANDROID -> RPI:\t\t ", message);
+                    Target t = _map.getTargets().get(targetid);
+                    t.setImg(imageid);
 
-                        //Coords c = map.get(seperatedtext[2]);
-                        //int x1 = c.getX();
-                       // int y1 = c.getY();
-                       // int id1 = Integer.parseInt(seperatedtext[1]);
-                        //String dir1 = seperatedtext[3];
-                        //gridMap.drawImageNumberCell(x1, y1, id1, dir1);
             }
 
             messageReceivedTextView.setText(statusWindowTxt);

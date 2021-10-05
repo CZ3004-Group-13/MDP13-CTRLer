@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Paint.Style;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -62,6 +63,7 @@ public final class MapCanvas extends View {
 
     private int cellSize = 0;
     private BoardMap _map = new BoardMap();
+    private static BoardMap _map2 = new BoardMap();
     private int turn = 0;
     private boolean isSolving = false;
 
@@ -325,12 +327,29 @@ public final class MapCanvas extends View {
         this.colorCell(canvas, y, x, 5.0F, this.endPaintColor);
 
         this.setPaint(this.tarNumPaintColor, this.tarNumColor);
+        //if statement to remove
+        if (this._map.getTargets().get(tarNum).getImg() > 0)
+        {
+            Paint textPaint = new Paint();
+            textPaint.setTextSize(30);
+            textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+            textPaint.setColor(Color.WHITE);
+            textPaint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText(Integer.toString(this._map.getTargets().get(tarNum).getImg()),
+                    this._map.getTargets().get(tarNum).getX(),
+                    this._map.getTargets().get(tarNum).getY(),
+                    textPaint
+            );
+        }
 
-        canvas.drawText(Integer.toString(tarNum+1),
-                this.cellSize * (x-1) + this.cellSize * 0.4f,
-                this.cellSize * y - this.cellSize*0.4f,
-                tarNumPaintColor
-        );
+        else {
+
+            canvas.drawText(Integer.toString(tarNum + 1),
+                    this.cellSize * (x - 1) + this.cellSize * 0.4f,
+                    this.cellSize * y - this.cellSize * 0.4f,
+                    tarNumPaintColor
+            );
+        }
 
         this.setPaint(this.startPaintColor, this.startColor);
 
