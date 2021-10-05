@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MDP13-CTRLer</string>
     <string name="reset">RESET</string>
-    <string name="targets"><u>BROADCAST TARGETS</u></string>
+    <string name="broadcast"><u>SEND OBSTACLES POSITIONS</u></string>
     <string name="bottom_sheet_title">BLUETOOTH</string>
 
     <string name="tab_connection">Connection</string>

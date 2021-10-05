@@ -47,7 +47,7 @@ public class MessageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_bthmessage, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_message, container, false);
         send = (Button) rootView.findViewById(R.id.messageButton);
         messageReceivedTextView = (TextView) rootView.findViewById(R.id.messageReceivedTextView);
         typeBoxEditText = (EditText) rootView.findViewById(R.id.typeBoxEditText);

@@ -97,7 +97,7 @@
             app:srcCompat="@drawable/ic_hud_left"
             android:tint="@color/yellow"
             android:background="@null"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="35dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/legend"
             />
@@ -109,7 +109,7 @@
             app:srcCompat="@drawable/ic_hud_right"
             android:tint="@color/yellow"
             android:background="@null"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="35dp"
             app:layout_constraintStart_toEndOf="@id/btn_left"
             app:layout_constraintTop_toBottomOf="@+id/legend"
             />
@@ -227,18 +227,17 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/black_hl"
             android:fontFamily="@font/open_sans_light"
-            android:text="@string/targets"
+            android:text="@string/broadcast"
             android:textSize="11sp"
             android:textColor="@color/blue_hl"
             android:textStyle="bold"
-            android:layout_marginTop="10dp"
+            android:padding="0dp"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
             app:layout_constraintEnd_toEndOf="@id/guideline3"
-            app:layout_constraintTop_toBottomOf="@id/pathGrid"
-            app:rippleColor="@color/blue_hl"
-            app:strokeColor="#6E6E6E" />
+            app:layout_constraintTop_toBottomOf="@id/legend"
+            app:layout_constraintBottom_toTopOf="@id/btn_right"
+            app:rippleColor="@color/blue_hl" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline3"
