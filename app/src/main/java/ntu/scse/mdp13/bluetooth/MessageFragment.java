@@ -1,11 +1,13 @@
 package ntu.scse.mdp13.bluetooth;
 
+import static ntu.scse.mdp13.leaderboard.TimerDialogFragment.BLUETOOTH_RUN_DONE;
 import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_FORWARD;
 import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_REVERSE;
 import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_STOP;
 import static ntu.scse.mdp13.map.Robot.STM_COMMAND_FORWARD;
 import static ntu.scse.mdp13.map.Robot.STM_COMMAND_REVERSE;
 import static ntu.scse.mdp13.map.Robot.STM_COMMAND_STOP;
+import static ntu.scse.mdp13.map.Target.BLUETOOTH_TARGET_IDENTIFIER;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -21,15 +23,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import ntu.scse.mdp13.R;
+import ntu.scse.mdp13.leaderboard.TimerDialogFragment;
 import ntu.scse.mdp13.map.BoardMap;
 import ntu.scse.mdp13.map.MapCanvas;
 import ntu.scse.mdp13.map.Target;
 
 public class MessageFragment extends Fragment {
 
-    private static final String TAG = "MessageFragment";
-
     private static String statusWindowTxt = "";
+    private static TimerDialogFragment timerDialog;
 
     Button send;
     static TextView messageReceivedTextView;
@@ -38,6 +40,8 @@ public class MessageFragment extends Fragment {
 
     // initializations
     public MessageFragment() {}
+
+    public static TimerDialogFragment getTimerDialog() { return timerDialog; }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,11 +56,11 @@ public class MessageFragment extends Fragment {
         messageReceivedTextView = (TextView) rootView.findViewById(R.id.messageReceivedTextView);
         typeBoxEditText = (EditText) rootView.findViewById(R.id.typeBoxEditText);
         scrollView = (ScrollView) rootView.findViewById(R.id.scrollView2D);
+        timerDialog = new TimerDialogFragment();
 
         //messageReceivedTextView.setMovementMethod(new ScrollingMovementMethod());
 
 
-        // get shared preferences
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,16 +100,18 @@ public class MessageFragment extends Fragment {
                     MessageFragment.sendMessage("MFIN -> RPI:\t\t", STM_COMMAND_STOP);
                     MessageFragment.addSeparator();
                     _map.getRobo().setMotor(ROBOT_MOTOR_STOP);
-                case "TARGET":
+                    break;
+                case BLUETOOTH_TARGET_IDENTIFIER:
                     //MapCanvas.drawTargetImage(1,2);
-                    String message;
                     int targetid = Integer.parseInt(parts[1]);
                     int imageid = Integer.parseInt(parts[2]);;
-                    message = "target id = " + targetid + "," + "img id = " + imageid;
-                    MessageFragment.sendMessage("ANDROID -> RPI:\t\t ", message);
                     Target t = _map.getTargets().get(targetid-1);
                     t.setImg(imageid);
-
+                    if (_map.hasReceivedAllTargets()) timerDialog.setBegan(false);
+                    break;
+                case BLUETOOTH_RUN_DONE:
+                    timerDialog.setBegan(false);
+                    break;
             }
 
             messageReceivedTextView.setText(statusWindowTxt);

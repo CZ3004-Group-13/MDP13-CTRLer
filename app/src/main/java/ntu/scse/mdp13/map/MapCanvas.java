@@ -1,6 +1,5 @@
 package ntu.scse.mdp13.map;
 
-import static java.lang.Math.abs;
 import static java.lang.Math.ceil;
 
 import android.annotation.SuppressLint;
@@ -14,15 +13,11 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Paint.Style;
 import android.graphics.Typeface;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-
-
 
 import ntu.scse.mdp13.R;
 import ntu.scse.mdp13.R.styleable;
@@ -327,8 +322,9 @@ public final class MapCanvas extends View {
         this.colorCell(canvas, y, x, 5.0F, this.endPaintColor);
 
         this.setPaint(this.tarNumPaintColor, this.tarNumColor);
-        //if statement to remove
-        if (this._map.getTargets().get(tarNum).getImg() > 0)
+
+        // UPDATE TARGET IMAGE
+        if (this._map.getTargets().get(tarNum).getImg() > -1)
         {
             Paint textPaint = new Paint();
             textPaint.setTextSize(30);

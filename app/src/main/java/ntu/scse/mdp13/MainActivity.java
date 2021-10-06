@@ -14,9 +14,6 @@ import static ntu.scse.mdp13.map.Robot.STM_COMMAND_RIGHT;
 import static ntu.scse.mdp13.map.Robot.STM_COMMAND_STOP;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import android.os.Handler;
@@ -41,9 +38,9 @@ import ntu.scse.mdp13.bluetooth.MessageFragment;
 import ntu.scse.mdp13.bluetooth.PagerAdapter;
 import ntu.scse.mdp13.bluetooth.PagerAdapter.TabItem;
 
+import ntu.scse.mdp13.leaderboard.TimerDialogFragment;
 import ntu.scse.mdp13.map.MapCanvas;
 import ntu.scse.mdp13.map.BoardMap;
-import ntu.scse.mdp13.map.Robot;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,11 +48,13 @@ public class MainActivity extends AppCompatActivity {
     private BoardMap _map = new BoardMap();
     Button btnReset;
     Button btnTarget;
+    Button btnImg;
     ImageButton btnForward;
     ImageButton btnReverse;
     ImageButton btnLeft;
     ImageButton btnRight;
 
+    Toolbar topToolbar;
     Toolbar bottomSheetToolbar;
     TabLayout bottomSheetTabLayout; //bottom_sheet_tabs
     ViewPager bottomSheetViewPager; //bottom_sheet_viewpager
@@ -75,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         btnReverse = (ImageButton) this.findViewById(R.id.btn_reverse);
         btnLeft = (ImageButton) this.findViewById(R.id.btn_left);
         btnRight = (ImageButton) this.findViewById(R.id.btn_right);
+        btnImg = (Button) this.findViewById(R.id.btn_img);
+        topToolbar = (Toolbar) this.findViewById(R.id.toolbar_top);
         bottomSheetToolbar = (Toolbar) this.findViewById(R.id.bottom_sheet_toolbar);
         bottomSheetTabLayout = (TabLayout) this.findViewById(R.id.topTabs);
         bottomSheetViewPager = (ViewPager) this.findViewById(R.id.viewpager);
@@ -101,6 +102,14 @@ public class MainActivity extends AppCompatActivity {
                 mapCanvas.setSolving(false);
                 _map.resetGrid();
                 mapCanvas.invalidate();
+            }
+        });
+
+        btnImg.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MessageFragment.sendMessage("LDRB -> RPI:\t\t", "DRAW_PATH");
+                showBottomSheetDialog();
             }
         });
 
@@ -220,5 +229,11 @@ public class MainActivity extends AppCompatActivity {
                 bluetooth_fragment.myClickMethod(v, this);
             }
         }
+    }
+
+    private void showBottomSheetDialog() {
+        TimerDialogFragment dialogFragment = MessageFragment.getTimerDialog();
+        topToolbar.setVisibility(View.GONE);
+        dialogFragment.show(getSupportFragmentManager(), dialogFragment.getTag());
     }
 }

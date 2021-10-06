@@ -1,12 +1,9 @@
 package ntu.scse.mdp13.map;
 
 import static ntu.scse.mdp13.map.Robot.ROBOT_FACE_NORTH;
-import static ntu.scse.mdp13.map.Target.TARGET_FACE_NORTH;
-
-import android.util.Log;
+import static ntu.scse.mdp13.map.Target.TARGET_IMG_NULL;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BoardMap {
     Robot robo;
@@ -59,6 +56,16 @@ public class BoardMap {
 
     public ArrayList<Target> getTargets() {
         return targets;
+    }
+
+    public boolean hasReceivedAllTargets() {
+        int targetReceived = 0;
+        for(int i = 0; i < targets.size(); i++) {
+            if (targets.get(i).getImg() > TARGET_IMG_NULL) {
+                targetReceived++;
+            }
+        }
+        return targetReceived == targets.size();
     }
 
     public void dequeueTarget(Target t) {

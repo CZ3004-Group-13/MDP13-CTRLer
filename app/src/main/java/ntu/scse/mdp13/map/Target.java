@@ -1,27 +1,30 @@
 package ntu.scse.mdp13.map;
 
 public class Target {
-    private int x, y, n, f;
-    private int img = 0;
+    private int x, y, n, f, i;
 
     public static final int TARGET_FACE_NORTH = 0;
     public static final int TARGET_FACE_EAST = 1;
     public static final int TARGET_FACE_SOUTH = 2;
     public static final int TARGET_FACE_WEST = 3;
+    public static final int TARGET_IMG_NULL = -1;
+
+    public static final String BLUETOOTH_TARGET_IDENTIFIER = "TARGET";
 
     public Target(int x, int y, int n) {
         this.x = x;
         this.y = y;
         this.n = n;
-        this.f = 0;
+        this.f = TARGET_FACE_NORTH;
+        this.i = TARGET_IMG_NULL;
     }
 
     public void setImg(int img) {
-        this.img = img;
+        this.i = img;
     }
 
     public int getImg() {
-        return img;
+        return i;
     }
 
     public int getX() {
