@@ -37,10 +37,19 @@
             android:textColor="@color/blue_hl"
             android:textSize="96sp"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:text=""
+            android:id="@+id/txtTargetCheckpoint"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/txtTimer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +58,7 @@
             app:backgroundTint="@color/black_hl"
             android:textColor="@color/yellow"
             android:layout_marginBottom="10dp"
-            app:layout_constraintTop_toBottomOf="@id/txtTimer"
+            app:layout_constraintTop_toBottomOf="@id/txtTargetCheckpoint"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
         <TextView

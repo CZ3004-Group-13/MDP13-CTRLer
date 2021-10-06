@@ -105,9 +105,10 @@ public class MessageFragment extends Fragment {
                 case BLUETOOTH_TARGET_IDENTIFIER:
                     //MapCanvas.drawTargetImage(1,2);
                     int targetid = Integer.parseInt(parts[1]);
-                    int imageid = Integer.parseInt(parts[2]);;
+                    int imageid = Integer.parseInt(parts[2]);
                     Target t = _map.getTargets().get(targetid-1);
                     t.setImg(imageid);
+                    timerDialog.updateCheckPointLbl(targetid, imageid);
                     if (_map.hasReceivedAllTargets()) timerDialog.setBegan(false);
                     break;
                 case BLUETOOTH_RUN_DONE:

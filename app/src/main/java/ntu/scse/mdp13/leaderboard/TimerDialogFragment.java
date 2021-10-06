@@ -22,6 +22,7 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
     Button btnTimer;
     TextView timeLbl;
     TextView swipeLbl;
+    TextView checkPointLbl;
 
     boolean hasBegan = false;
     String currentTime = "";
@@ -41,6 +42,7 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
         swipeLbl = contentView.findViewById(R.id.txtLblStopTimer);
         bottomSheetToolbar.setTitle("Timer");
         currentTime = (String) timeLbl.getText();
+        checkPointLbl = contentView.findViewById(R.id.txtTargetCheckpoint);
         dialog.setContentView(contentView);
 
         setupTimerButton();
@@ -91,6 +93,11 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
         } else {
             if (timer != null) timer.cancel();
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void updateCheckPointLbl(int obsId, int targetId) {
+        checkPointLbl.setText(checkPointLbl.getText() + "O" + obsId + "_T" + targetId + "->" + currentTime + "\t\t");
     }
 
     @Override
