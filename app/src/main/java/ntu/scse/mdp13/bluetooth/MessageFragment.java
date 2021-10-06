@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +93,7 @@ public class MessageFragment extends Fragment {
             statusWindowTxt += "RPI -> BLTH:\t\t" + msg + "\n";
             statusWindowTxt = statusWindowTxt.replace("\n\n", "\n");
 
-            String[] parts = msg.split("\\|");
+            String[] parts = msg.replace("\n", "").replace("\r", "").split("\\|");
             switch(parts[0]) {
                 case STM_COMMAND_FORWARD:
                 case STM_COMMAND_REVERSE:

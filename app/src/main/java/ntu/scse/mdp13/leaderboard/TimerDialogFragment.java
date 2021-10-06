@@ -13,6 +13,8 @@ import android.widget.TextView;
 import biz.laenger.android.vpbs.ViewPagerBottomSheetDialogFragment;
 import ntu.scse.mdp13.R;
 import ntu.scse.mdp13.bluetooth.MessageFragment;
+import ntu.scse.mdp13.map.BoardMap;
+import ntu.scse.mdp13.map.MapCanvas;
 
 public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
     static CountDownTimer timer;
@@ -95,6 +97,8 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
         getActivity().findViewById(R.id.toolbar_top).setVisibility(View.VISIBLE);
+        BoardMap _map = ((MapCanvas) getActivity().findViewById(R.id.pathGrid)).getFinder();
+        _map.defaceTargets();
     }
 
     public void setBegan(boolean b) {

@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 int n = 0;
                 while (n < _map.getTargets().size()) {
                     String message;
+                    MessageFragment.sendMessage("MAP -> RPI:\t\t ", "RESET" + '\n');
                     message = "OBS|[" + (n+1) + "," + _map.getTargets().get(n).getX() + "," + (21-_map.getTargets().get(n).getY()) + "," + _map.getTargets().get(n).getF() + "]";
                     MessageFragment.sendMessage("MAP -> RPI:\t\t ", message + '\n');
                     n++;

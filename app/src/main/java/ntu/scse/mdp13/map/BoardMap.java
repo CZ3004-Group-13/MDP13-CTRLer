@@ -68,6 +68,12 @@ public class BoardMap {
         return targetReceived == targets.size();
     }
 
+    public void defaceTargets() {
+        for(int i = 0; i < targets.size(); i++) {
+            targets.get(i).setImg(TARGET_IMG_NULL);
+        }
+    }
+
     public void dequeueTarget(Target t) {
         int delTargetIdx = t.getN();
 
