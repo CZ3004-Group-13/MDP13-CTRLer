@@ -16,6 +16,7 @@ import ntu.scse.mdp13.bluetooth.MessageFragment;
 import ntu.scse.mdp13.map.BoardMap;
 import ntu.scse.mdp13.map.MapCanvas;
 
+@SuppressLint("ValidFragment")
 public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
     static CountDownTimer timer;
     Toolbar bottomSheetToolbar;
@@ -26,10 +27,14 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
 
     boolean hasBegan = false;
     String currentTime = "";
+    String runType = "";
 
     public static final String BLUETOOTH_RUN_DONE = "DONE";
 
-    public TimerDialogFragment() {}
+    @SuppressLint("ValidFragment")
+    public TimerDialogFragment(String runType) {
+        this.runType = runType;
+    }
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -40,19 +45,16 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
         btnTimer = contentView.findViewById(R.id.btn_timer);
         timeLbl = contentView.findViewById(R.id.txtTimer);
         swipeLbl = contentView.findViewById(R.id.txtLblStopTimer);
-        bottomSheetToolbar.setTitle("Image Recognition Run");
+        bottomSheetToolbar.setTitle(runType);
         currentTime = (String) timeLbl.getText();
         checkPointLbl = contentView.findViewById(R.id.txtTargetCheckpoint);
         dialog.setContentView(contentView);
 
         setupTimerButton();
 
-        btnTimer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hasBegan = !hasBegan;
-                setupTimerButton();
-            }
+        btnTimer.setOnClickListener(view -> {
+            hasBegan = !hasBegan;
+            setupTimerButton();
         });
     }
 
@@ -112,4 +114,8 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
         this.hasBegan = b;
         setupTimerButton();
     }
+
+    public String getRunType() { return runType; }
+
+    public void setRunType(String runType) { this.runType = runType; }
 }

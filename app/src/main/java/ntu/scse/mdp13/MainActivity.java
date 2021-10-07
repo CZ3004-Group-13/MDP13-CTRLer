@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnReset;
     Button btnTarget;
     Button btnImg;
+    Button btnFastest;
     ImageButton btnForward;
     ImageButton btnReverse;
     ImageButton btnLeft;
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         btnLeft = (ImageButton) this.findViewById(R.id.btn_left);
         btnRight = (ImageButton) this.findViewById(R.id.btn_right);
         btnImg = (Button) this.findViewById(R.id.btn_img);
+        btnFastest = (Button) this.findViewById(R.id.btn_fastest);
         topToolbar = (Toolbar) this.findViewById(R.id.toolbar_top);
         bottomSheetToolbar = (Toolbar) this.findViewById(R.id.bottom_sheet_toolbar);
         bottomSheetTabLayout = (TabLayout) this.findViewById(R.id.topTabs);
@@ -99,6 +101,14 @@ public class MainActivity extends AppCompatActivity {
                     MessageFragment.sendMessage("MAP -> RPI:\t\t ", message + '\n');
                     n++;
                 }}
+        });
+
+        btnFastest.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MessageFragment.sendMessage("LDRB -> RPI:\t\t", "START_FASTEST");
+                showBottomSheetDialog("fastest");
+            }
         });
 
         btnReset.setOnClickListener(new OnClickListener() {
@@ -238,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 MessageFragment.sendMessage("LDRB -> RPI:\t\t", "DRAW_PATH");
-                showBottomSheetDialog("timer");
+                showBottomSheetDialog("img");
             }
         });
 
@@ -263,15 +273,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showBottomSheetDialog(String dialog) {
+        topToolbar.setVisibility(View.GONE);
         switch (dialog) {
-            case "timer":
-                TimerDialogFragment timerDialog = MessageFragment.getTimerDialog();
-                topToolbar.setVisibility(View.GONE);
-                timerDialog.show(getSupportFragmentManager(), timerDialog.getTag());
+            case "img":
+                TimerDialogFragment imgDialog = MessageFragment.getTimerDialog("Image Recognition Run");
+                imgDialog.show(getSupportFragmentManager(), imgDialog.getTag());
+                break;
+            case "fastest":
+                TimerDialogFragment fastestDialog = MessageFragment.getTimerDialog("Fastest Path Run");
+                fastestDialog.show(getSupportFragmentManager(), fastestDialog.getTag());
                 break;
             case "config":
                 final MapConfigDialog mapConfigDialog = new MapConfigDialog();
-                topToolbar.setVisibility(View.GONE);
                 mapConfigDialog.show(getSupportFragmentManager(), mapConfigDialog.getTag());
                 break;
         }

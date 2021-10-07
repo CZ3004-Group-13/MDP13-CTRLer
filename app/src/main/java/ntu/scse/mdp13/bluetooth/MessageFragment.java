@@ -47,7 +47,10 @@ public class MessageFragment extends Fragment {
     // initializations
     public MessageFragment() {}
 
-    public static TimerDialogFragment getTimerDialog() { return timerDialog; }
+    public static TimerDialogFragment getTimerDialog(String runType) {
+        timerDialog = new TimerDialogFragment(runType);
+        return timerDialog;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +65,6 @@ public class MessageFragment extends Fragment {
         messageReceivedTextView = (TextView) rootView.findViewById(R.id.messageReceivedTextView);
         typeBoxEditText = (EditText) rootView.findViewById(R.id.typeBoxEditText);
         scrollView = (ScrollView) rootView.findViewById(R.id.scrollView2D);
-        timerDialog = new TimerDialogFragment();
 
         //messageReceivedTextView.setMovementMethod(new ScrollingMovementMethod());
 
@@ -108,12 +110,14 @@ public class MessageFragment extends Fragment {
                     _map.getRobo().setMotor(ROBOT_MOTOR_STOP);
                     break;
                 case BLUETOOTH_TARGET_IDENTIFIER:
-                    int targetid = Integer.parseInt(parts[1]);
-                    int imageid = Integer.parseInt(parts[2]);
-                    Target t = _map.getTargets().get(targetid-1);
-                    t.setImg(imageid);
-                    timerDialog.updateCheckPointLbl(targetid, imageid);
-                    if (_map.hasReceivedAllTargets()) timerDialog.setBegan(false);
+                    if (timerDialog.getRunType().equals("Image Recognition Run")) {
+                        int targetid = Integer.parseInt(parts[1]);
+                        int imageid = Integer.parseInt(parts[2]);
+                        Target t = _map.getTargets().get(targetid-1);
+                        t.setImg(imageid);
+                        timerDialog.updateCheckPointLbl(targetid, imageid);
+                        if (_map.hasReceivedAllTargets()) timerDialog.setBegan(false);
+                    }
                     break;
                 case BLUETOOTH_RUN_DONE:
                     timerDialog.setBegan(false);
@@ -144,6 +148,5 @@ public class MessageFragment extends Fragment {
             //user switched fragment
             return;
         }
-
     }
 }
