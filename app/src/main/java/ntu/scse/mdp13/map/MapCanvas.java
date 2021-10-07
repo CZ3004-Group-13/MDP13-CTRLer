@@ -58,13 +58,14 @@ public final class MapCanvas extends View {
 
     private int cellSize = 0;
     private BoardMap _map = new BoardMap();
-    private static BoardMap _map2 = new BoardMap();
     private int turn = 0;
     private boolean isSolving = false;
 
     public static final int NEW_TARGET_TURN = 0;
     public static final int CAR_BLOCK_TURN = -1;
     public static final int TARGET_BLOCK_TURN = 1;
+
+    private Canvas canvas;
 
     public MapCanvas(Context context) {
         super(context);
@@ -99,6 +100,7 @@ public final class MapCanvas extends View {
 
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        this.canvas = canvas;
 
         this.setPaint(this.pathPaintColor, this.pathColor);
         this.drawGrid(canvas);

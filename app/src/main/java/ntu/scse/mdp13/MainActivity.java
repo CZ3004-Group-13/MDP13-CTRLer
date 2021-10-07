@@ -39,6 +39,7 @@ import ntu.scse.mdp13.bluetooth.MessageFragment;
 import ntu.scse.mdp13.bluetooth.PagerAdapter;
 import ntu.scse.mdp13.bluetooth.PagerAdapter.TabItem;
 
+import ntu.scse.mdp13.leaderboard.MapConfigDialog;
 import ntu.scse.mdp13.leaderboard.TimerDialogFragment;
 import ntu.scse.mdp13.map.MapCanvas;
 import ntu.scse.mdp13.map.BoardMap;
@@ -109,14 +110,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnImg.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MessageFragment.sendMessage("LDRB -> RPI:\t\t", "DRAW_PATH");
-                showBottomSheetDialog();
-            }
-        });
-
         mapCanvas.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -125,10 +118,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        setupImgLongClick();
         setupControlsLongClicks(btnForward, ROBOT_MOTOR_FORWARD);
         setupControlsLongClicks(btnReverse, ROBOT_MOTOR_REVERSE);
         setupControlsLongClicks(btnLeft, ROBOT_SERVO_LEFT);
         setupControlsLongClicks(btnRight, ROBOT_SERVO_RIGHT);
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateRoboStatus() {
+        topTitle.setText("X: " + _map.getRobo().getX() + " Y: " + (20-_map.getRobo().getY()) + "\t\t" + _map.getRobo().getFacingText());
     }
 
     private void setupControlsLongClicks(View btn, int direction) {
@@ -225,9 +224,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("SetTextI18n")
-    private void updateRoboStatus() {
-        topTitle.setText("ROBOT\t\tX: " + _map.getRobo().getX() + " Y: " + (20-_map.getRobo().getY()) + "\t\t" + _map.getRobo().getFacingText());
+    private void setupImgLongClick() {
+
+        btnImg.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showBottomSheetDialog("config");
+                return true;
+            }
+        });
+
+        btnImg.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MessageFragment.sendMessage("LDRB -> RPI:\t\t", "DRAW_PATH");
+                showBottomSheetDialog("timer");
+            }
+        });
+
     }
 
     private void setupBottomSheet() {
@@ -248,9 +262,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showBottomSheetDialog() {
-        TimerDialogFragment dialogFragment = MessageFragment.getTimerDialog();
-        topToolbar.setVisibility(View.GONE);
-        dialogFragment.show(getSupportFragmentManager(), dialogFragment.getTag());
+    private void showBottomSheetDialog(String dialog) {
+        switch (dialog) {
+            case "timer":
+                TimerDialogFragment timerDialog = MessageFragment.getTimerDialog();
+                topToolbar.setVisibility(View.GONE);
+                timerDialog.show(getSupportFragmentManager(), timerDialog.getTag());
+                break;
+            case "config":
+                final MapConfigDialog mapConfigDialog = new MapConfigDialog();
+                topToolbar.setVisibility(View.GONE);
+                mapConfigDialog.show(getSupportFragmentManager(), mapConfigDialog.getTag());
+                break;
+        }
     }
 }

@@ -19,6 +19,14 @@ public class Target {
         this.i = TARGET_IMG_NULL;
     }
 
+    public Target(int x, int y, int n, int f) {
+        this.x = x;
+        this.y = y;
+        this.n = n;
+        this.f = f;
+        this.i = TARGET_IMG_NULL;
+    }
+
     public void setImg(int img) {
         this.i = img;
     }
@@ -65,7 +73,11 @@ public class Target {
     @Override
     public String toString() {
         return "Target{" +
-                "n=" + n +
+                "x=" + x +
+                ", y=" + y +
+                ", n=" + n +
+                ", f=" + f +
+                ", i=" + i +
                 '}';
     }
 }

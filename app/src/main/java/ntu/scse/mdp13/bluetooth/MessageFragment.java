@@ -103,7 +103,6 @@ public class MessageFragment extends Fragment {
                     _map.getRobo().setMotor(ROBOT_MOTOR_STOP);
                     break;
                 case BLUETOOTH_TARGET_IDENTIFIER:
-                    //MapCanvas.drawTargetImage(1,2);
                     int targetid = Integer.parseInt(parts[1]);
                     int imageid = Integer.parseInt(parts[2]);
                     Target t = _map.getTargets().get(targetid-1);
