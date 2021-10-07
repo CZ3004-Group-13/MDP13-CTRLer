@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton btnReverse;
     ImageButton btnLeft;
     ImageButton btnRight;
+    TextView topTitle;
 
     Toolbar topToolbar;
     Toolbar bottomSheetToolbar;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         bottomSheetToolbar = (Toolbar) this.findViewById(R.id.bottom_sheet_toolbar);
         bottomSheetTabLayout = (TabLayout) this.findViewById(R.id.topTabs);
         bottomSheetViewPager = (ViewPager) this.findViewById(R.id.viewpager);
+        topTitle = (TextView) this.findViewById(R.id.top_title);
 
         setupBottomSheet();
 
@@ -114,13 +117,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setupLongClicks(btnForward, ROBOT_MOTOR_FORWARD);
-        setupLongClicks(btnReverse, ROBOT_MOTOR_REVERSE);
-        setupLongClicks(btnLeft, ROBOT_SERVO_LEFT);
-        setupLongClicks(btnRight, ROBOT_SERVO_RIGHT);
+        mapCanvas.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                updateRoboStatus();
+                return false;
+            }
+        });
+
+        setupControlsLongClicks(btnForward, ROBOT_MOTOR_FORWARD);
+        setupControlsLongClicks(btnReverse, ROBOT_MOTOR_REVERSE);
+        setupControlsLongClicks(btnLeft, ROBOT_SERVO_LEFT);
+        setupControlsLongClicks(btnRight, ROBOT_SERVO_RIGHT);
     }
 
-    private void setupLongClicks(View btn, int direction) {
+    private void setupControlsLongClicks(View btn, int direction) {
         btn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.btn_accelerate:
                         case R.id.btn_reverse:
                             _map.getRobo().motorRotate(direction);
-                            Log.d("ROBOT", "CLICK " + _map.getRobo().toString());
                             break;
                          //case R.id.btn_left:
                          //case R.id.btn_right:
@@ -138,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                              //break;
                     }
                 }
+                updateRoboStatus();
                 longpress.clear();
             }
         });
@@ -188,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 }
-
+                updateRoboStatus();
                 return false;
             }
 
@@ -212,6 +223,11 @@ public class MainActivity extends AppCompatActivity {
             };
 
         });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateRoboStatus() {
+        topTitle.setText("ROBOT\t\tX: " + _map.getRobo().getX() + " Y: " + (20-_map.getRobo().getY()) + "\t\t" + _map.getRobo().getFacingText());
     }
 
     private void setupBottomSheet() {

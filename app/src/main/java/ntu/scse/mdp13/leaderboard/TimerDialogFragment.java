@@ -40,7 +40,7 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
         btnTimer = contentView.findViewById(R.id.btn_timer);
         timeLbl = contentView.findViewById(R.id.txtTimer);
         swipeLbl = contentView.findViewById(R.id.txtLblStopTimer);
-        bottomSheetToolbar.setTitle("Timer");
+        bottomSheetToolbar.setTitle("Image Recognition Run");
         currentTime = (String) timeLbl.getText();
         checkPointLbl = contentView.findViewById(R.id.txtTargetCheckpoint);
         dialog.setContentView(contentView);

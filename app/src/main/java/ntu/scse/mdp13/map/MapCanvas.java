@@ -446,6 +446,7 @@ public final class MapCanvas extends View {
             this.invalidate();
         }
 
+
         return true;
     }
 

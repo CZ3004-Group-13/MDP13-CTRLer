@@ -53,6 +53,15 @@ public class Robot {
 
     public int getFacing() { return f; }
     public void setFacing(int f) { this.f = f; }
+    public String getFacingText() {
+        switch (this.f) {
+            case 0: return "NORTH";
+            case 1: return "EAST";
+            case 2: return "SOUTH";
+            case 3: return "WEST";
+        }
+        return "N";
+    }
 
     public void motorRotate(int direction) {
 
