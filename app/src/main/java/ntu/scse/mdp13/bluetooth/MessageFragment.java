@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import ntu.scse.mdp13.MainActivity;
 import ntu.scse.mdp13.R;
 import ntu.scse.mdp13.leaderboard.TimerDialogFragment;
 import ntu.scse.mdp13.map.BoardMap;
@@ -131,8 +132,9 @@ public class MessageFragment extends Fragment {
                     break;
                 case ROBOT_COMMAND_POS:
                     _map.getRobo().setX(Integer.parseInt(parts[1]));
-                    _map.getRobo().setY(Integer.parseInt(parts[2]));
+                    _map.getRobo().setY(20-Integer.parseInt(parts[2]));
                     _map.getRobo().setFacing(Integer.parseInt(parts[3]));
+                    ((MainActivity)activity).updateRoboStatus();
                     break;
             }
 
