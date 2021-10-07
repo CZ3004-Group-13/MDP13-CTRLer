@@ -23,6 +23,7 @@ public class Robot {
     public static final int ROBOT_FACE_SOUTH = 2;
     public static final int ROBOT_FACE_WEST = 3;
 
+    public static final String ROBOT_COMMAND_POS = "ROBOT";
     public static final String STM_COMMAND_FORWARD = "f";
     public static final String STM_COMMAND_REVERSE = "b";
     public static final String STM_COMMAND_STOP = "x";

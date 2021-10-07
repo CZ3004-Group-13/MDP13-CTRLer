@@ -2,6 +2,7 @@ package ntu.scse.mdp13.bluetooth;
 
 import static ntu.scse.mdp13.leaderboard.MapConfigDialog.RPI_COMMAND_READ_OBS;
 import static ntu.scse.mdp13.leaderboard.TimerDialogFragment.BLUETOOTH_RUN_DONE;
+import static ntu.scse.mdp13.map.Robot.ROBOT_COMMAND_POS;
 import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_FORWARD;
 import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_REVERSE;
 import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_STOP;
@@ -127,6 +128,11 @@ public class MessageFragment extends Fragment {
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString(obss, obss);
                     editor.apply();
+                    break;
+                case ROBOT_COMMAND_POS:
+                    _map.getRobo().setX(Integer.parseInt(parts[1]));
+                    _map.getRobo().setY(Integer.parseInt(parts[2]));
+                    _map.getRobo().setFacing(Integer.parseInt(parts[3]));
                     break;
             }
 
