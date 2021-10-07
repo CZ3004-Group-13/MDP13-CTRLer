@@ -1,5 +1,6 @@
 package ntu.scse.mdp13.bluetooth;
 
+import static ntu.scse.mdp13.leaderboard.MapConfigDialog.RPI_COMMAND_READ_OBS;
 import static ntu.scse.mdp13.leaderboard.TimerDialogFragment.BLUETOOTH_RUN_DONE;
 import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_FORWARD;
 import static ntu.scse.mdp13.map.Robot.ROBOT_MOTOR_REVERSE;
@@ -10,6 +11,8 @@ import static ntu.scse.mdp13.map.Robot.STM_COMMAND_STOP;
 import static ntu.scse.mdp13.map.Target.BLUETOOTH_TARGET_IDENTIFIER;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -112,6 +115,18 @@ public class MessageFragment extends Fragment {
                     break;
                 case BLUETOOTH_RUN_DONE:
                     timerDialog.setBegan(false);
+                    break;
+                case RPI_COMMAND_READ_OBS:
+                    SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+                    String obss = "";
+                    for(int i=0; i < parts.length; i++) {
+                        String obs = parts[i].replace("OBS", "").replace("[", "").replace("]", "|");
+                        if (!obs.equals(""))
+                            obss += obs;
+                    }
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(obss, obss);
+                    editor.apply();
                     break;
             }
 

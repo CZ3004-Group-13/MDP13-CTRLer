@@ -24,6 +24,8 @@ public class MapConfigDialog extends ViewPagerBottomSheetDialogFragment {
     Button saveBtn;
     LinearLayout linearLayout;
 
+    public static final String RPI_COMMAND_READ_OBS = "OBS";
+
     @SuppressLint("RestrictedApi")
     @Override
     public void setupDialog(Dialog dialog, int style) {
@@ -35,7 +37,7 @@ public class MapConfigDialog extends ViewPagerBottomSheetDialogFragment {
         linearLayout = (LinearLayout) contentView.findViewById(R.id.linear_scroll_savedMap);
         dialog.setContentView(contentView);
 
-        //getActivity().getPreferences(Context.MODE_PRIVATE).edit().clear().commit();
+        //getActivity().getPreferences(Context.MODE_PRIVATE).edit().clear().commit(); //clear all saved obs
         MapCanvas _map = (MapCanvas) getActivity().findViewById(R.id.pathGrid);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
