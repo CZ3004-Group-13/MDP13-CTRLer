@@ -66,7 +66,7 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
         swipeLbl.setVisibility(currentTime.equals("00:00:00") ? View.GONE : View.VISIBLE);
         this.setCancelable(!hasBegan);
         if (hasBegan) {
-            MessageFragment.sendMessage("LDRB -> RPI:\t\t", "BANANAS");
+            MessageFragment.sendMessage("LDRB -> RPI:\t\t", runType == "img" ? "BANANAS" : "LEMON");
 
             final long totalTime = 30 * 60 * 1000;//30 mins
             final TextView textView = (TextView) timeLbl;
