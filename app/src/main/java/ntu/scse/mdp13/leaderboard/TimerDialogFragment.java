@@ -6,11 +6,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.CountDownTimer;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import biz.laenger.android.vpbs.ViewPagerBottomSheetDialogFragment;
@@ -18,6 +16,14 @@ import ntu.scse.mdp13.R;
 import ntu.scse.mdp13.bluetooth.MessageFragment;
 import ntu.scse.mdp13.map.BoardMap;
 import ntu.scse.mdp13.map.MapCanvas;
+
+/***********************************
+ * Note to future self or those who
+ * end up have to read this file:
+ *
+ * It's all spaghetti code.
+ * Just give up. Or re-write.
+ ***********************************/
 
 @SuppressLint("ValidFragment")
     public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
@@ -97,7 +103,7 @@ import ntu.scse.mdp13.map.MapCanvas;
         swipeLbl.setVisibility(hasBegan || currentTime.equals("00:00:00") ? View.GONE : View.VISIBLE);
         this.setCancelable(btnTimer.getText().equals("Start"));
         if (hasBegan) {
-            MessageFragment.sendMessage("LDRB -> RPI:\t\t", runType.equals("img") ? "BANANAS" : "LEMON");
+            MessageFragment.sendMessage("LDRB -> RPI:\t\t", runType.equals("Image Recognition Run") ? "BANANAS" : "LEMON");
 
             final long totalTime = 30 * 60 * 1000;//30 mins
             final TextView textView = (TextView) timeLbl;
@@ -130,20 +136,18 @@ import ntu.scse.mdp13.map.MapCanvas;
         switch(this.confirmCount){
             case 3:
                 ((Button) view).setText("Tap here 3 times to close");
-                this.confirmCount--;
                 break;
             case 2:
                 ((Button) view).setText("Confirm Close??");
-                this.confirmCount--;
                 break;
             case 1:
                 ((Button) view).setText("Close");
-                this.setCancelable(true);
-                this.confirmCount--;
                 break;
             case 0:
+                this.setCancelable(true);
                 this.dismiss();
         }
+        if (this.confirmCount <= 3) this.confirmCount--;
     }
 
     @SuppressLint("SetTextI18n")
