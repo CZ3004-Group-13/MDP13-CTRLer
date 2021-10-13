@@ -9,8 +9,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import biz.laenger.android.vpbs.ViewPagerBottomSheetBehavior;
 import biz.laenger.android.vpbs.ViewPagerBottomSheetDialogFragment;
 import ntu.scse.mdp13.R;
 import ntu.scse.mdp13.bluetooth.MessageFragment;
@@ -34,6 +36,7 @@ import ntu.scse.mdp13.map.MapCanvas;
     TextView timeLbl;
     TextView swipeLbl;
     TextView checkPointLbl;
+    private ViewPagerBottomSheetBehavior mBehavior;
 
     boolean hasBegan = false;
     String currentTime = "";
@@ -61,7 +64,16 @@ import ntu.scse.mdp13.map.MapCanvas;
         bottomSheetToolbar.setTitle(runType);
         currentTime = (String) timeLbl.getText();
         checkPointLbl = contentView.findViewById(R.id.txtTargetCheckpoint);
+
         dialog.setContentView(contentView);
+
+        LinearLayout ll = contentView.findViewById(R.id.ll_padding);
+        if (runType.equals("Fastest Path Run")) {
+            ll.setVisibility(View.VISIBLE);
+            ll.setMinimumHeight(650);
+        } else {
+            ll.setVisibility(View.GONE);
+        }
 
         setupTimerButton();
 
