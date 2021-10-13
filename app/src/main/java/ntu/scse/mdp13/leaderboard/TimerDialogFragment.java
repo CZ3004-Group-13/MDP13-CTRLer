@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.CountDownTimer;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +32,7 @@ import ntu.scse.mdp13.map.MapCanvas;
     boolean hasBegan = false;
     String currentTime = "";
     String runType = "";
-    int confirmCount = 2;
+    int confirmCount = 3;
     boolean btnStartTouch = false;
 
     public static final String BLUETOOTH_RUN_DONE = "DONE";
@@ -84,18 +85,7 @@ import ntu.scse.mdp13.map.MapCanvas;
             }
         });
 
-        btnClose.setOnClickListener(view -> {
-            if (!hasBegan && !currentTime.equals("00:00:00")) {
-                if (this.confirmCount > 0) {
-                    ((Button) view).setText("Confirm Close??");
-                    this.confirmCount--;
-                    if (confirmCount == 0) ((Button) view).setText("Close!");
-                } else {
-                    this.setCancelable(true);
-                    this.dismiss();
-                }
-            }
-        });
+        btnClose.setOnClickListener(this::setupStopButton);
     }
 
     private void setupTimerButton() {
@@ -105,15 +95,15 @@ import ntu.scse.mdp13.map.MapCanvas;
         btnTimer.setTextColor(hasBegan ? getResources().getColor(R.color.red) : getResources().getColor(R.color.yellow));
         btnClose.setVisibility(hasBegan || currentTime.equals("00:00:00") ? View.GONE : View.VISIBLE);
         swipeLbl.setVisibility(hasBegan || currentTime.equals("00:00:00") ? View.GONE : View.VISIBLE);
-        this.setCancelable(!hasBegan && currentTime.equals("00:00:00"));
+        this.setCancelable(btnTimer.getText().equals("Start"));
         if (hasBegan) {
-            MessageFragment.sendMessage("LDRB -> RPI:\t\t", runType == "img" ? "BANANAS" : "LEMON");
+            MessageFragment.sendMessage("LDRB -> RPI:\t\t", runType.equals("img") ? "BANANAS" : "LEMON");
 
             final long totalTime = 30 * 60 * 1000;//30 mins
             final TextView textView = (TextView) timeLbl;
-
+            this.confirmCount = 3;
+            setupStopButton(btnClose);
             timer = new CountDownTimer(totalTime, 10) {
-
                 @SuppressLint("SetTextI18n")
                 public void onTick(long millisUntilFinished) {
                     int secondsInt = (int) ((totalTime - millisUntilFinished) / 1000 % 60);
@@ -133,6 +123,26 @@ import ntu.scse.mdp13.map.MapCanvas;
             timer.start();
         } else {
             if (timer != null) timer.cancel();
+        }
+    }
+
+    private void setupStopButton(View view) {
+        switch(this.confirmCount){
+            case 3:
+                ((Button) view).setText("Tap here 3 times to close");
+                this.confirmCount--;
+                break;
+            case 2:
+                ((Button) view).setText("Confirm Close??");
+                this.confirmCount--;
+                break;
+            case 1:
+                ((Button) view).setText("Close");
+                this.setCancelable(true);
+                this.confirmCount--;
+                break;
+            case 0:
+                this.dismiss();
         }
     }
 
