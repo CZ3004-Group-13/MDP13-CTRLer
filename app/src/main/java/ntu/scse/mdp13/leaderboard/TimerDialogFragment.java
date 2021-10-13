@@ -116,6 +116,4 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
     }
 
     public String getRunType() { return runType; }
-
-    public void setRunType(String runType) { this.runType = runType; }
 }

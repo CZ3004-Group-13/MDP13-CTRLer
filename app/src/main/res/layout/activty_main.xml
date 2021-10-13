@@ -96,8 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_left"
-            app:srcCompat="@drawable/ic_hud_left"
-            android:tint="@color/yellow"
+            app:srcCompat="@drawable/ic_hud_left_states"
             android:background="@null"
             android:layout_marginTop="35dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -108,8 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_right"
-            app:srcCompat="@drawable/ic_hud_right"
-            android:tint="@color/yellow"
+            app:srcCompat="@drawable/ic_hud_right_states"
             android:background="@null"
             android:layout_marginTop="35dp"
             app:layout_constraintStart_toEndOf="@id/btn_left"
@@ -132,9 +130,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_accelerate"
-            app:srcCompat="@drawable/ic_hud_accelerate"
+            app:srcCompat="@drawable/ic_hud_accelerator_states"
             android:longClickable="true"
-            android:tint="@color/blue_hl"
             android:background="@null"
             android:layout_marginTop="30dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -154,25 +151,12 @@
             app:layout_constraintTop_toBottomOf="@id/btn_accelerate"
             />
 
-        <!--        <ImageButton-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            app:srcCompat="@drawable/ic_hud_stop"-->
-        <!--            android:tint="@color/red"-->
-        <!--            android:background="@null"-->
-        <!--            android:layout_marginTop="5dp"-->
-        <!--            android:layout_marginEnd="-10dp"-->
-        <!--            app:layout_constraintRight_toLeftOf="@id/btn_accelerate"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/legend"-->
-        <!--            />-->
-
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_reverse"
-            app:srcCompat="@drawable/ic_hud_brake"
+            app:srcCompat="@drawable/ic_hud_brake_states"
             android:longClickable="true"
-            android:tint="@color/blue"
             android:background="@null"
             android:layout_marginTop="60dp"
             app:layout_constraintRight_toLeftOf="@id/btn_accelerate"
