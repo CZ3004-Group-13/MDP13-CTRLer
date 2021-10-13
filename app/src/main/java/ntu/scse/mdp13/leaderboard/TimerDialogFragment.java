@@ -6,8 +6,10 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.CountDownTimer;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import biz.laenger.android.vpbs.ViewPagerBottomSheetDialogFragment;
@@ -17,10 +19,11 @@ import ntu.scse.mdp13.map.BoardMap;
 import ntu.scse.mdp13.map.MapCanvas;
 
 @SuppressLint("ValidFragment")
-public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
+    public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
     static CountDownTimer timer;
     Toolbar bottomSheetToolbar;
     Button btnTimer;
+    Button btnClose;
     TextView timeLbl;
     TextView swipeLbl;
     TextView checkPointLbl;
@@ -28,6 +31,8 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
     boolean hasBegan = false;
     String currentTime = "";
     String runType = "";
+    int confirmCount = 2;
+    boolean btnStartTouch = false;
 
     public static final String BLUETOOTH_RUN_DONE = "DONE";
 
@@ -36,13 +41,14 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
         this.runType = runType;
     }
 
-    @SuppressLint("RestrictedApi")
+    @SuppressLint({"RestrictedApi", "ClickableViewAccessibility"})
     @Override
     public void setupDialog(Dialog dialog, int style) {
         super.setupDialog(dialog, style);
         final View contentView = View.inflate(getContext(), R.layout.dialog_timer, null);
         bottomSheetToolbar = contentView.findViewById(R.id.bottom_sheet_toolbar);
         btnTimer = contentView.findViewById(R.id.btn_timer);
+        btnClose = contentView.findViewById(R.id.btn_close_timer);
         timeLbl = contentView.findViewById(R.id.txtTimer);
         swipeLbl = contentView.findViewById(R.id.txtLblStopTimer);
         bottomSheetToolbar.setTitle(runType);
@@ -56,6 +62,40 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
             hasBegan = !hasBegan;
             setupTimerButton();
         });
+
+        // I TRIED MY BEST TO PREVENT ACCIDENTAL TOUCH SLIPS
+        btnTimer.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch(motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        dialog.setCancelable(false);
+                        btnStartTouch = true;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (btnStartTouch && !hasBegan) dialog.setCancelable(false);
+                        else {
+                            dialog.setCancelable(true);
+                            btnStartTouch = false;
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+
+        btnClose.setOnClickListener(view -> {
+            if (!hasBegan && !currentTime.equals("00:00:00")) {
+                if (this.confirmCount > 0) {
+                    ((Button) view).setText("Confirm Close??");
+                    this.confirmCount--;
+                    if (confirmCount == 0) ((Button) view).setText("Close!");
+                } else {
+                    this.setCancelable(true);
+                    this.dismiss();
+                }
+            }
+        });
     }
 
     private void setupTimerButton() {
@@ -63,8 +103,9 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
                 : !currentTime.equals("00:00:00") ? "Restart"
                 : "Start");
         btnTimer.setTextColor(hasBegan ? getResources().getColor(R.color.red) : getResources().getColor(R.color.yellow));
-        swipeLbl.setVisibility(currentTime.equals("00:00:00") ? View.GONE : View.VISIBLE);
-        this.setCancelable(!hasBegan);
+        btnClose.setVisibility(hasBegan || currentTime.equals("00:00:00") ? View.GONE : View.VISIBLE);
+        swipeLbl.setVisibility(hasBegan || currentTime.equals("00:00:00") ? View.GONE : View.VISIBLE);
+        this.setCancelable(!hasBegan && currentTime.equals("00:00:00"));
         if (hasBegan) {
             MessageFragment.sendMessage("LDRB -> RPI:\t\t", runType == "img" ? "BANANAS" : "LEMON");
 
@@ -86,9 +127,7 @@ public class TimerDialogFragment extends ViewPagerBottomSheetDialogFragment {
                     textView.setText(currentTime);
                 }
 
-                public void onFinish() {
-                    timer = null;
-                }
+                public void onFinish() { timer = null; }
 
             };
             timer.start();

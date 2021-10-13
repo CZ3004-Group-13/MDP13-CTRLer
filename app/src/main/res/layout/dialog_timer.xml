@@ -20,7 +20,17 @@
             style="@style/BottomSheetToolbarStyle"
             android:layout_width="match_parent"
             android:background="@color/black_bg"
-            app:titleTextColor="@color/blue"/>
+            app:titleTextColor="@color/blue">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_close_timer"
+                android:text="Tap here 3 times to close"
+                app:rippleColor="@color/red"
+                android:textColor="@color/red"
+                android:layout_gravity="end"
+                android:backgroundTint="@color/black_hl" />
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -51,14 +61,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="135dp"
+            android:layout_height="80dp"
             android:id="@+id/btn_timer"
             android:text="Start"
             app:backgroundTint="@color/black_hl"
             android:textColor="@color/yellow"
+            app:rippleColor="@null"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_marginBottom="10dp"
-            app:layout_constraintTop_toBottomOf="@id/txtTargetCheckpoint"
+            app:layout_constraintTop_toBottomOf="@id/txtTimer"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
         <TextView
@@ -68,6 +80,7 @@
             android:text="@string/pause"
             android:textSize="13sp"
             android:textColor="@color/red"
+            android:gravity="center"
             android:layout_marginBottom="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
