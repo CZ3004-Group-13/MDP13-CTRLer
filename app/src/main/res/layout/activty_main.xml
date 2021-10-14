@@ -34,6 +34,7 @@
                 android:id="@+id/btn_fastest"
                 android:text="Fastest"
                 android:textColor="@color/blue"
+                app:rippleColor="@color/blue_hl"
                 android:backgroundTint="@color/black_bg"
                 android:layout_gravity="start" />
 
@@ -54,6 +55,7 @@
                 android:id="@+id/btn_img"
                 android:text="Image"
                 android:textColor="@color/blue"
+                app:rippleColor="@color/blue_hl"
                 android:backgroundTint="@color/black_bg"
                 android:layout_gravity="right"/>
 
