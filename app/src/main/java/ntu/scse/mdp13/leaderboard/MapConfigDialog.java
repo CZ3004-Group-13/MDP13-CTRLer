@@ -86,7 +86,7 @@ public class MapConfigDialog extends ViewPagerBottomSheetDialogFragment {
                 _map.getFinder().resetGrid();
                 for(int i=0; i <= obss.length-1 ; i++) {
                     String[] xy = obss[i].split(",");
-                    _map.getFinder().getTargets().add(new Target(Integer.parseInt(xy[1]), 21-Integer.parseInt(xy[2]), Integer.parseInt(xy[0]), Integer.parseInt(xy[3])));
+                    _map.getFinder().getTargets().add(new Target(Integer.parseInt(xy[1]), 21-Integer.parseInt(xy[2]), Integer.parseInt(xy[0])-1, Integer.parseInt(xy[3])));
                     _map.getFinder().getBoard()[_map.getFinder().getTargets().get(i).getX()][_map.getFinder().getTargets().get(i).getY()] = TARGET_CELL_CODE;
                 }
             });
