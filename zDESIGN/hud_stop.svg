@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <g id="hud_stop2" transform="translate(3381 556)">
+    <g id="hud_blank" transform="translate(-3381 -556)" fill="none" stroke="#000" stroke-width="5">
+      <circle cx="128" cy="128" r="128" stroke="none"/>
+      <circle cx="128" cy="128" r="125.5" fill="none"/>
+    </g>
+    <g id="hud_blank-2" data-name="hud_blank" transform="translate(-3348 -522)" fill="none" stroke="#000" stroke-width="5">
+      <ellipse cx="95.5" cy="94.5" rx="95.5" ry="94.5" stroke="none"/>
+      <ellipse cx="95.5" cy="94.5" rx="93" ry="92" fill="none"/>
+    </g>
+  </g>
+</svg>
